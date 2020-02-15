@@ -1,0 +1,18 @@
+[submodule "deps/cpplocate"]
+	path = deps/cpplocate
+	url = https://github.com/cginternals/cpplocate
+[submodule "deps/glad"]
+	path = deps/glad
+	url = https://github.com/Dav1dde/glad
+[submodule "deps/glbinding"]
+	path = deps/glbinding
+	url = https://github.com/cginternals/glbinding
+[submodule "deps/glfw"]
+	path = deps/glfw
+	url = https://github.com/glfw/glfw
+[submodule "deps/glm"]
+	path = deps/glm
+	url = https://github.com/g-truc/glm
+[submodule "deps/imgui"]
+	path = deps/imgui
+	url = https://github.com/ocornut/imgui
