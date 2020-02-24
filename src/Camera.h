@@ -12,7 +12,7 @@
 
 namespace App {
 
-  // An abstract camera class that processes input 
+  // A camera class that processes input 
   // Calculates the corresponding Euler Angles, Vectors and Matrices
   class Camera {
 
@@ -75,7 +75,6 @@ namespace App {
 
       // Calculates the forward vector from the Camera's (updated) Euler Angles
       void updateCameraVectors();
-
   };
 }
 

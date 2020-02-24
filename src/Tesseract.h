@@ -19,7 +19,7 @@ namespace App {
       ~Tesseract();
 
       // Transform of this object
-      glm::mat4 transform;
+      float transform[5][5];
 
       // Push vertices to buffers for rendering
       void updateVertices();

@@ -5,8 +5,12 @@
 #define EDITOR_H
 
 #include <memory>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
+#include <glm/matrix.hpp>
 #include "Scene.h"
 #include "Camera.h"
+#include "Camera4D.h"
 #include "Tesseract.h"
 #include "shaders/Vertex.h"
 #include "shaders/Fragment.h"
@@ -51,6 +55,7 @@ namespace App {
 
       // The camera for viewing the world
       Camera camera;
+      Camera4D camera4D;
       float standardCameraSpeed = Camera::SPEED;
       float alternateCameraSpeed = Camera::SPEED * 5;
       float* cameraSpeed = &standardCameraSpeed;

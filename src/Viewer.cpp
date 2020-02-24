@@ -57,8 +57,9 @@ App::Viewer::Viewer(Engine& e) : Scene(e) {
   // Viewer //
   ////////////
 
-  // Intialise the camera
+  // Intialise the cameras
   camera = Camera(glm::vec3(0.f, 1.f, 5.f));
+  camera4D = Camera4D();
 
   // Initialise tesseract
   object = std::make_unique<Tesseract>();
@@ -172,22 +173,40 @@ App::Viewer::update(double dt) {
 void
 App::Viewer::render() {
 
-  // Get the view matrix from the camera
-  glm::mat4 view = camera.getViewMatrix();
+  // Get the view matrices from the camera
+  glm::mat4 view3D = camera.getViewMatrix();
+  float* view4D = camera4D.getViewMatrix();
 
-  // Create projection matrix
-  glm::mat4 projection;
-  projection = glm::perspective(
+  // Create 3D projection matrix
+  glm::mat4 projTo2D = glm::perspective(
       glm::radians(fieldOfVision), 
       engine.getAspectRatio(), 0.1f, viewDistance);
 
-  // Give view matrix to vertex shader
-  const int viewLoc = glGetUniformLocation(shaderProgram, "view");
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+  // Create 4D projection matrix
+  float angle4D = 45.f;
+  const float p = 1.f / (glm::tan(angle4D / 2));
+  float projTo3D[25] = {
+      p, 0.f, 0.f, 0.f, 0.f,
+      0.f, p, 0.f, 0.f, 0.f,
+      0.f, 0.f, p, 0.f, 0.f,
+      0.f, 0.f, 0.f, 1.f, 0.f,
+      0.f, 0.f, 0.f, 0.f, 1.f};
 
-  // Give projection matrix to vertex shader
-  const int projLoc = glGetUniformLocation(shaderProgram, "projection");
-  glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+  // Give 3D view matrix to vertex shader
+  const int view3DLoc = glGetUniformLocation(shaderProgram, "view3D");
+  glUniformMatrix4fv(view3DLoc, 1, GL_FALSE, glm::value_ptr(view3D));
+
+  // Give 4D view matrix to vertex shader
+  const int view4DLoc = glGetUniformLocation(shaderProgram, "view4D");
+  glUniform1fv(view4DLoc, sizeof(float) * 25, view4D);
+
+  // Give 3D projection matrix to vertex shader
+  const int proj3DLoc = glGetUniformLocation(shaderProgram, "projTo2D");
+  glUniformMatrix4fv(proj3DLoc, 1, GL_FALSE, glm::value_ptr(projTo2D));
+
+  // Give 4D projection matrix to vertex shader
+  const int proj4DLoc = glGetUniformLocation(shaderProgram, "projTo3D");
+  glUniform1fv(proj4DLoc, sizeof(float) * 25, projTo3D);
 
   // Show wireframes when enabled
   glPolygonMode(GL_FRONT_AND_BACK, showWireframe ? GL_LINE : GL_FILL);
@@ -200,7 +219,7 @@ App::Viewer::render() {
 
     // Give OpenGL transform of object
     const int trans = glGetUniformLocation(shaderProgram, "transform");
-    glUniformMatrix4fv(trans, 1, GL_FALSE, glm::value_ptr(object->transform));
+    glUniform1fv(trans, sizeof(float) * 25, (float*)object->transform);
 
     // Render object
     object->render();

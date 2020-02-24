@@ -7,7 +7,11 @@
 App::Tesseract::Tesseract() {
 
   // Generate default transform
-  transform = glm::identity<glm::mat4>();
+  for (unsigned int j = 0; j < 5; ++j) {
+    for (unsigned int i = 0; i < 5; ++i) {
+      transform[j][i] = i == j ? 1.f : 0.f;
+    }
+  }
 
   // Generate vertices
   printf("Constructing Tesseract..\n");
@@ -15,7 +19,7 @@ App::Tesseract::Tesseract() {
   vertexCount = 0;
 
   // Create a unit tesseract
-  for (int w = 0; w < 2; ++w) {
+  for (int w = 1; w < 3; ++w) {
     for (int z = -1; z < 2; z += 2) {
       for (int y = -1; y < 2; y += 2) {
         for (int x = -1; x < 2; x += 2) {
@@ -24,7 +28,7 @@ App::Tesseract::Tesseract() {
           vertices[vertexCount++] = (float)x;
           vertices[vertexCount++] = (float)y;
           vertices[vertexCount++] = (float)z;
-          vertices[vertexCount++] = (float)w + 1.f;
+          vertices[vertexCount++] = (float)w;
         }
       }
     }
@@ -41,7 +45,7 @@ App::Tesseract::Tesseract() {
   for (int w = 0; w < 2; ++w) {
 
     // Find which cube this vertex belongs to (inner or outer)
-    const unsigned int origin = w * 2 * 2 * 2 * 4;
+    const unsigned int origin = w * 2 * 2 * 2;
 
     // Top face
     indices[indexCount++] = origin;
