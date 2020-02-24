@@ -24,7 +24,7 @@ App::Tesseract::Tesseract() {
           vertices[vertexCount++] = (float)x;
           vertices[vertexCount++] = (float)y;
           vertices[vertexCount++] = (float)z;
-          vertices[vertexCount++] = (float)w;
+          vertices[vertexCount++] = (float)w + 1.f;
         }
       }
     }

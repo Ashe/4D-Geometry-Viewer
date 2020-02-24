@@ -14,8 +14,7 @@ namespace App::Shaders {
       "uniform mat4 projection;\n"
       "void main()\n"
       "{\n"
-      "   vec4 pos = vec4(aPos.xyz, 1);\n"
-      "   gl_Position = projection * view * transform * pos;\n"
+      "   gl_Position = projection * view * transform * aPos;\n"
       "}\0";
 }
 
