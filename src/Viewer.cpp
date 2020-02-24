@@ -12,7 +12,7 @@ App::Viewer::Viewer(Engine& e) : Scene(e) {
 
   // Create and compile vertex shader
   vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+  glShaderSource(vertexShader, 1, &App::Shaders::vertexSource, NULL);
   glCompileShader(vertexShader);
 
   // Check for any errors
@@ -26,7 +26,7 @@ App::Viewer::Viewer(Engine& e) : Scene(e) {
 
   // Create and compile fragment shader
   fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+  glShaderSource(fragmentShader, 1, &App::Shaders::fragmentSource, NULL);
   glCompileShader(fragmentShader);
 
   // Check for any errors
@@ -59,6 +59,9 @@ App::Viewer::Viewer(Engine& e) : Scene(e) {
 
   // Intialise the camera
   camera = Camera(glm::vec3(0.f, 1.f, 5.f));
+
+  // Initialise tesseract
+  object = std::make_unique<Tesseract>();
 }
 
 // Handle keyboard input for keybindings
@@ -178,9 +181,11 @@ App::Viewer::render() {
       glm::radians(fieldOfVision), 
       engine.getAspectRatio(), 0.1f, viewDistance);
 
-  // Give matrices to shaders
+  // Give view matrix to vertex shader
   const int viewLoc = glGetUniformLocation(shaderProgram, "view");
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+  // Give projection matrix to vertex shader
   const int projLoc = glGetUniformLocation(shaderProgram, "projection");
   glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
@@ -190,7 +195,16 @@ App::Viewer::render() {
   // Choose a shader
   glUseProgram(shaderProgram);
 
-  // @TODO: Do rendering here
+  // Render the tesseract
+  if (object != nullptr) {
+
+    // Give OpenGL transform of object
+    const int trans = glGetUniformLocation(shaderProgram, "transform");
+    glUniformMatrix4fv(trans, 1, GL_FALSE, glm::value_ptr(object->transform));
+
+    // Render object
+    object->render();
+  }
 }
 
 // Grant the viewer access to imgui

@@ -4,8 +4,12 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
+#include <memory>
 #include "Scene.h"
 #include "Camera.h"
+#include "Tesseract.h"
+#include "shaders/Vertex.h"
+#include "shaders/Fragment.h"
 
 namespace App {
 
@@ -35,31 +39,15 @@ namespace App {
 
     private:
 
-      // Vertex shader source code
-      const char *vertexShaderSource = "#version 330 core\n"
-          "layout (location = 0) in vec3 aPos;\n"
-          "uniform mat4 transform;\n"
-          "uniform mat4 view;\n"
-          "uniform mat4 projection;\n"
-          "void main()\n"
-          "{\n"
-          "   gl_Position = projection * view * transform * vec4(aPos, 1.0);\n"
-          "}\0";
-
-      // Fragment shader source code
-      const char *fragmentShaderSource = "#version 330 core\n"
-          "out vec4 FragColor;\n"
-          "void main()\n"
-          "{\n"
-              "FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);\n"
-          "}\0";
-
       // ID of each shader
       unsigned int vertexShader;
       unsigned int fragmentShader;
 
       // ID of shader program
       unsigned int shaderProgram;
+
+      // Current object to render
+      std::unique_ptr<Tesseract> object;
 
       // The camera for viewing the world
       Camera camera;
