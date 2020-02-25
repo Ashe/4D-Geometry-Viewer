@@ -167,6 +167,11 @@ App::Viewer::update(double dt) {
       }
     }
   }
+
+  // Finally, update the transform of the object
+  if (object != nullptr) {
+    object->updateTransform(dt);
+  }
 }
 
 // Render geometry
@@ -219,7 +224,7 @@ App::Viewer::render() {
 
     // Give OpenGL transform of object
     const int trans = glGetUniformLocation(shaderProgram, "transform");
-    glUniform1fv(trans, sizeof(float) * 25, (float*)object->transform);
+    glUniform1fv(trans, sizeof(float) * 25, object->getTransform());
 
     // Render object
     object->render();
@@ -339,14 +344,16 @@ App::Viewer::handleImgui() {
   if (object != nullptr && showTransformWindow) {
     if (ImGui::Begin("Transform", &showTransformWindow)) {
 
-      // Allow viewing and manipulation of transform matrix
+      // Allow viewing of transform matrix
+      const float* const transform = object->getTransform();
       ImGui::PushItemWidth(60);
       for(unsigned int j = 0; j < 5; ++j) {
         for(unsigned int i = 0; i < 5; ++i) {
           if (i != 0) { ImGui::SameLine(); }
           char* entry = new char[5];
           std::sprintf(entry, "##%ux%u", i, j);
-          ImGui::DragFloat(entry, &object->transform[j][i], 0.1f);
+          float value = transform[i + j * 5];
+          ImGui::DragFloat(entry, &value, 0.1f);
         }
       }
       ImGui::PopItemWidth();
@@ -355,27 +362,11 @@ App::Viewer::handleImgui() {
       // Allow the creation of different matrices
       if (ImGui::BeginTabBar("Transformations", ImGuiTabBarFlags_None)) {
         if (ImGui::BeginTabItem("Scale")) {
-          static glm::vec4 scale = { 1.f, 1.f, 1.f, 1.f };
           ImGui::PushItemWidth(60);
-          bool adjust = false;
-          adjust |= ImGui::DragFloat("x", &scale.x, 0.1f); ImGui::SameLine();
-          adjust |= ImGui::DragFloat("y", &scale.y, 0.1f); ImGui::SameLine();
-          adjust |= ImGui::DragFloat("z", &scale.z, 0.1f); ImGui::SameLine();
-          adjust |= ImGui::DragFloat("w", &scale.w, 0.1f);
-          if (adjust) {
-            for(unsigned int j = 0; j < 5; ++j) {
-              for(unsigned int i = 0; i < 5; ++i) {
-                switch (i + j * 5) {
-                  case 0: object->transform[j][i] = scale.x; break;
-                  case 6: object->transform[j][i] = scale.y; break;
-                  case 12: object->transform[j][i] = scale.z; break;
-                  case 18: object->transform[j][i] = scale.w; break;
-                  case 24: object->transform[j][i] = 1.f; break;
-                  default: object->transform[j][i] = 0.f; break;
-                }
-              }
-            }
-          }
+          ImGui::DragFloat("x", &object->scale.x, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("y", &object->scale.y, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("z", &object->scale.z, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("w", &object->scale.w, 0.1f);
           ImGui::PopItemWidth();
           ImGui::EndTabItem();
         }
@@ -384,6 +375,7 @@ App::Viewer::handleImgui() {
       }
 
       // Reset the matrix 
+      ImGui::Separator();
       ImGui::Spacing();
       if (ImGui::Button("Reset transform")) {
         object->resetTransform();

@@ -28,7 +28,7 @@ namespace App {
     public:
 
       // The colour to clear the window with
-      ImVec4 clearColour = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+      ImVec4 clearColour = ImVec4(0.f, 0.f, 0.f, 0.f);
 
       // Create a window and start the engine
       bool initialise(

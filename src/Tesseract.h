@@ -18,8 +18,8 @@ namespace App {
       Tesseract(const Tesseract&) = delete;
       ~Tesseract();
 
-      // Transform of this object
-      float transform[5][5];
+      // Transform values
+      glm::vec4 scale;
 
       // Push vertices to buffers for rendering
       void updateVertices();
@@ -27,8 +27,14 @@ namespace App {
       // Render the Tesseract
       void render();
 
-      // Reset the transform for this object
+      // Recreate the transformation matrix
+      void updateTransform(double dt = 0.0);
+
+      // Reset transform values for this object
       void resetTransform();
+
+      // Get the transform matrix of the object based on values
+      float* getTransform() const;
 
     private:
 
@@ -39,6 +45,13 @@ namespace App {
 
       // IDs of buffers
       unsigned int VBO, EBO, VAO;
+
+      // Transform of this object
+      float transform[5][5];
+      float scaleMatrix[5][5];
+
+      // Multiply two 5x5 matrices together
+      static void mult(float out[5][5], float a[5][5], float b[5][5]);
   };
 }
 

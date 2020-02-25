@@ -163,12 +163,74 @@ App::Tesseract::render() {
   glBindVertexArray(0);
 }
 
-// Reset the transform for this object
-void
-App::Tesseract::resetTransform() {
+// Recreate the transformation matrix
+void 
+App::Tesseract::updateTransform(double dt) {
+
+  // Start with identity matrix
   for (unsigned int j = 0; j < 5; ++j) {
     for (unsigned int i = 0; i < 5; ++i) {
       transform[j][i] = i == j ? 1.f : 0.f;
+    }
+  }
+
+  // Recreate scale matrix
+  for(unsigned int j = 0; j < 5; ++j) {
+    for(unsigned int i = 0; i < 5; ++i) {
+      switch (i + j * 5) {
+        case 0:   scaleMatrix[j][i] = scale.x; break;
+        case 6:   scaleMatrix[j][i] = scale.y; break;
+        case 12:  scaleMatrix[j][i] = scale.z; break;
+        case 18:  scaleMatrix[j][i] = scale.w; break;
+        case 24:  scaleMatrix[j][i] = 1.f; break;
+        default:  scaleMatrix[j][i] = 0.f; break;
+      }
+    }
+  }
+
+  // Combine matrices to make transform
+  mult(transform, scaleMatrix, transform);
+}
+
+// Reset transform values for this object
+void
+App::Tesseract::resetTransform() {
+
+  // Reset transform values to sane defaults
+  scale = glm::vec4(1.f, 1.f, 1.f, 1.f);
+
+  // Recreate the transform using these new values
+  updateTransform();
+}
+
+// Get the transform matrix of the object based on values
+float* 
+App::Tesseract::getTransform() const{
+  return (float*)transform;
+}
+
+// Multiply two 5x5 matrices together
+void
+App::Tesseract::mult(float out[5][5], float a[5][5], float b[5][5]) {
+
+  // Define temporary vector
+  std::vector<std::vector<float>> temp(5);
+
+  // Iterate through all elements
+  for (unsigned int j = 0; j < 5; ++j) {
+    temp[j] = std::vector<float>(5);
+    for (unsigned int i = 0; i < 5; ++i) {
+      temp[j][i] = 0;
+      for (unsigned int k = 0; k < 5; ++k) {
+        temp[j][i] += a[k][i] * b[j][k];
+      }
+    }
+  }
+
+  // Return the variables in the temporary vector
+  for (unsigned int j = 0; j < 5; ++j) {
+    for (unsigned int i = 0; i < 5; ++i) {
+      out[j][i] = temp[j][i];
     }
   }
 }
