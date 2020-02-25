@@ -230,9 +230,6 @@ App::Viewer::render() {
 void 
 App::Viewer::handleImgui() {
 
-  // Scale of the environment for speed / distance
-  unsigned int scale = 1;
-
   // Main menu bar
   if (ImGui::BeginMainMenuBar()) {
 
@@ -244,7 +241,8 @@ App::Viewer::handleImgui() {
     // View menu
     if (ImGui::BeginMenu("View")) {
       ImGui::MenuItem("Show wireframes", "CTRL + W", &showWireframe);
-      ImGui::MenuItem("Camera properties", NULL, &showCameraWindow);
+      ImGui::MenuItem("3D Camera properties", NULL, &show3DCameraWindow);
+      ImGui::MenuItem("4D Camera properties", NULL, &show4DCameraWindow);
       ImGui::EndMenu();
     }
 
@@ -252,18 +250,15 @@ App::Viewer::handleImgui() {
   }
 
   // Show camera settings
-  if (showCameraWindow) {
-    if (ImGui::Begin("Camera Properties", &showCameraWindow)) {
+  if (show3DCameraWindow) {
+    if (ImGui::Begin("3D Camera Properties", &show3DCameraWindow)) {
       ImGui::Text("Location:");
-      glm::vec3 pos = camera.position;
-      pos /= scale > 0.f ? (float)scale : 1.f;
       ImGui::PushItemWidth(60);
-      ImGui::DragFloat("X##camX", &pos.x, 1.f);
+      ImGui::DragFloat("X##camX", &camera.position.x, 1.f);
       ImGui::SameLine();
-      ImGui::DragFloat("Y##camY", &pos.y, 1.f);
+      ImGui::DragFloat("Y##camY", &camera.position.y, 1.f);
       ImGui::SameLine();
-      ImGui::DragFloat("Z##camZ", &pos.z, 1.f);
-      camera.position = pos * (scale > 0.f ? (float)scale : 1.f);
+      ImGui::DragFloat("Z##camZ", &camera.position.z, 1.f);
       ImGui::DragFloat("Pitch", &camera.pitch, 1.f);
       ImGui::SameLine();
       ImGui::DragFloat("Yaw", &camera.yaw, 1.f);
@@ -279,6 +274,62 @@ App::Viewer::handleImgui() {
       ImGui::Spacing();
       if (ImGui::Button("Reset position")) {
         resetCameraPosition();
+      }
+      ImGui::End();
+    }
+  }
+
+  // Show camera settings
+  if (show4DCameraWindow) {
+    if (ImGui::Begin("4D Camera Properties", &show4DCameraWindow)) {
+      ImGui::PushItemWidth(60);
+      ImGui::Text("Location:");
+      ImGui::SameLine();
+      ImGui::DragFloat("X##cam4DX", &camera4D.position.x, 0.1f);
+      ImGui::SameLine();
+      ImGui::DragFloat("Y##cam4DY", &camera4D.position.y, 0.1f);
+      ImGui::SameLine();
+      ImGui::DragFloat("Z##cam4DZ", &camera4D.position.z, 0.1f);
+      ImGui::SameLine();
+      ImGui::DragFloat("W##cam4DW", &camera4D.position.w, 0.1f);
+
+      ImGui::Text("Target:");
+      ImGui::SameLine();
+      ImGui::DragFloat("X##cam4DTargetX", &camera4D.target.x, 0.1f);
+      ImGui::SameLine();
+      ImGui::DragFloat("Y##cam4DTargetY", &camera4D.target.y, 0.1f);
+      ImGui::SameLine();
+      ImGui::DragFloat("Z##cam4DTargetZ", &camera4D.target.z, 0.1f);
+      ImGui::SameLine();
+      ImGui::DragFloat("W##cam4DTargetW", &camera4D.target.w, 0.1f);
+
+      ImGui::Text("Up:");
+      ImGui::SameLine();
+      ImGui::DragFloat("X##cam4DUpX", &camera4D.up.x, 0.1f);
+      ImGui::SameLine();
+      ImGui::DragFloat("Y##cam4DUpY", &camera4D.up.y, 0.1f);
+      ImGui::SameLine();
+      ImGui::DragFloat("Z##cam4DUpZ", &camera4D.up.z, 0.1f);
+      ImGui::SameLine();
+      ImGui::DragFloat("W##cam4DUpW", &camera4D.up.w, 0.1f);
+
+      ImGui::Text("Over:");
+      ImGui::SameLine();
+      ImGui::DragFloat("X##cam4DOverX", &camera4D.over.x, 0.1f);
+      ImGui::SameLine();
+      ImGui::DragFloat("Y##cam4DOverY", &camera4D.over.y, 0.1f);
+      ImGui::SameLine();
+      ImGui::DragFloat("Z##cam4DOverZ", &camera4D.over.z, 0.1f);
+      ImGui::SameLine();
+      ImGui::DragFloat("W##cam4DOverW", &camera4D.over.w, 0.1f);
+
+      ImGui::PopItemWidth();
+
+      if (ImGui::Button("Reset")) {
+        camera4D.position = glm::vec4(0.f, 0.f, 0.f, 0.f);
+        camera4D.target = glm::vec4(1.f, 0.f, 0.f, 0.f);
+        camera4D.up = glm::vec4(0.f, 1.f, 0.f, 0.f);
+        camera4D.over = glm::vec4(0.f, 0.f, 1.f, 0.f);
       }
       ImGui::End();
     }

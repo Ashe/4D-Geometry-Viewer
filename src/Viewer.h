@@ -64,7 +64,8 @@ namespace App {
 
       // Toggleable editor windows and features
       bool showWireframe = false;
-      bool showCameraWindow = true;
+      bool show3DCameraWindow = true;
+      bool show4DCameraWindow = false;
       bool showDemoWindow = false;
 
       // Place camera back into a normal position
