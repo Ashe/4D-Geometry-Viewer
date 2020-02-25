@@ -19,6 +19,7 @@ namespace App {
       ~Tesseract();
 
       // Transform values
+      glm::vec4 position;
       glm::vec4 scale;
 
       // Push vertices to buffers for rendering
@@ -48,6 +49,7 @@ namespace App {
 
       // Transform of this object
       float transform[5][5];
+      float translationMatrix[5][5];
       float scaleMatrix[5][5];
 
       // Multiply two 5x5 matrices together

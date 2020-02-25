@@ -361,6 +361,17 @@ App::Viewer::handleImgui() {
 
       // Allow the creation of different matrices
       if (ImGui::BeginTabBar("Transformations", ImGuiTabBarFlags_None)) {
+
+        if (ImGui::BeginTabItem("Position")) {
+          ImGui::PushItemWidth(60);
+          ImGui::DragFloat("x", &object->position.x, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("y", &object->position.y, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("z", &object->position.z, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("w", &object->position.w, 0.1f);
+          ImGui::PopItemWidth();
+          ImGui::EndTabItem();
+        }
+
         if (ImGui::BeginTabItem("Scale")) {
           ImGui::PushItemWidth(60);
           ImGui::DragFloat("x", &object->scale.x, 0.1f); ImGui::SameLine();

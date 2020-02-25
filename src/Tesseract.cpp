@@ -174,6 +174,27 @@ App::Tesseract::updateTransform(double dt) {
     }
   }
 
+  // Recreate translation matrix
+  for(unsigned int j = 0; j < 5; ++j) {
+    for(unsigned int i = 0; i < 5; ++i) {
+      if (i == j) {
+        translationMatrix[j][i] = 1.f;
+      }
+      else if (i == 4) {
+        switch (j) {
+          case 0: translationMatrix[j][i] = position.x; break;
+          case 1: translationMatrix[j][i] = position.y; break;
+          case 2: translationMatrix[j][i] = position.z; break;
+          case 3: translationMatrix[j][i] = position.w; break;
+          default:  printf("[Error] Invalid index in translation matrix.\n");
+        }
+      }
+      else {
+        translationMatrix[j][i] = 0.f;
+      }
+    }
+  }
+
   // Recreate scale matrix
   for(unsigned int j = 0; j < 5; ++j) {
     for(unsigned int i = 0; i < 5; ++i) {
@@ -189,6 +210,7 @@ App::Tesseract::updateTransform(double dt) {
   }
 
   // Combine matrices to make transform
+  mult(transform, translationMatrix, transform);
   mult(transform, scaleMatrix, transform);
 }
 
@@ -197,6 +219,7 @@ void
 App::Tesseract::resetTransform() {
 
   // Reset transform values to sane defaults
+  position = glm::vec4(0.f, 0.f, 0.f, 0.f);
   scale = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
   // Recreate the transform using these new values
