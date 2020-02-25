@@ -7,11 +7,7 @@
 App::Tesseract::Tesseract() {
 
   // Generate default transform
-  for (unsigned int j = 0; j < 5; ++j) {
-    for (unsigned int i = 0; i < 5; ++i) {
-      transform[j][i] = i == j ? 1.f : 0.f;
-    }
-  }
+  resetTransform();
 
   // Generate vertices
   printf("Constructing Tesseract..\n");
@@ -165,4 +161,14 @@ App::Tesseract::render() {
 
   // Unbind VAO
   glBindVertexArray(0);
+}
+
+// Reset the transform for this object
+void
+App::Tesseract::resetTransform() {
+  for (unsigned int j = 0; j < 5; ++j) {
+    for (unsigned int i = 0; i < 5; ++i) {
+      transform[j][i] = i == j ? 1.f : 0.f;
+    }
+  }
 }

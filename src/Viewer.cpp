@@ -335,6 +335,63 @@ App::Viewer::handleImgui() {
     }
   }
 
+  // Transform matrix
+  if (object != nullptr && showTransformWindow) {
+    if (ImGui::Begin("Transform", &showTransformWindow)) {
+
+      // Allow viewing and manipulation of transform matrix
+      ImGui::PushItemWidth(60);
+      for(unsigned int j = 0; j < 5; ++j) {
+        for(unsigned int i = 0; i < 5; ++i) {
+          if (i != 0) { ImGui::SameLine(); }
+          char* entry = new char[5];
+          std::sprintf(entry, "##%ux%u", i, j);
+          ImGui::DragFloat(entry, &object->transform[j][i], 0.1f);
+        }
+      }
+      ImGui::PopItemWidth();
+      ImGui::Spacing();
+
+      // Allow the creation of different matrices
+      if (ImGui::BeginTabBar("Transformations", ImGuiTabBarFlags_None)) {
+        if (ImGui::BeginTabItem("Scale")) {
+          static glm::vec4 scale = { 1.f, 1.f, 1.f, 1.f };
+          ImGui::PushItemWidth(60);
+          bool adjust = false;
+          adjust |= ImGui::DragFloat("x", &scale.x, 0.1f); ImGui::SameLine();
+          adjust |= ImGui::DragFloat("y", &scale.y, 0.1f); ImGui::SameLine();
+          adjust |= ImGui::DragFloat("z", &scale.z, 0.1f); ImGui::SameLine();
+          adjust |= ImGui::DragFloat("w", &scale.w, 0.1f);
+          if (adjust) {
+            for(unsigned int j = 0; j < 5; ++j) {
+              for(unsigned int i = 0; i < 5; ++i) {
+                switch (i + j * 5) {
+                  case 0: object->transform[j][i] = scale.x; break;
+                  case 6: object->transform[j][i] = scale.y; break;
+                  case 12: object->transform[j][i] = scale.z; break;
+                  case 18: object->transform[j][i] = scale.w; break;
+                  case 24: object->transform[j][i] = 1.f; break;
+                  default: object->transform[j][i] = 0.f; break;
+                }
+              }
+            }
+          }
+          ImGui::PopItemWidth();
+          ImGui::EndTabItem();
+        }
+
+        ImGui::EndTabBar();
+      }
+
+      // Reset the matrix 
+      ImGui::Spacing();
+      if (ImGui::Button("Reset transform")) {
+        object->resetTransform();
+      }
+      ImGui::End();
+    }
+  }
+
   // Show imgui demo
   if (showDemoWindow) {
     ImGui::ShowDemoWindow(&showDemoWindow);

@@ -27,6 +27,9 @@ namespace App {
       // Render the Tesseract
       void render();
 
+      // Reset the transform for this object
+      void resetTransform();
+
     private:
 
       // Vertices and indices of tesseract
