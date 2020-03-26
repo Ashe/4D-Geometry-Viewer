@@ -221,16 +221,6 @@ App::Viewer::render() {
       glm::radians(fieldOfVision), 
       engine.getAspectRatio(), 0.1f, viewDistance);
 
-  // Create 4D projection matrix
-  float angle4D = 45.f;
-  const float p = 1.f / (glm::tan(angle4D / 2));
-  float projTo3D[25] = {
-      p, 0.f, 0.f, 0.f, 0.f,
-      0.f, p, 0.f, 0.f, 0.f,
-      0.f, 0.f, p, 0.f, 0.f,
-      0.f, 0.f, 0.f, 1.f, 0.f,
-      0.f, 0.f, 0.f, 0.f, 1.f};
-
   // Give 3D view matrix to vertex shader
   const int view3DLoc = glGetUniformLocation(shaderProgram, "view3D");
   glUniformMatrix4fv(view3DLoc, 1, GL_FALSE, glm::value_ptr(view3D));
@@ -242,10 +232,6 @@ App::Viewer::render() {
   // Give 3D projection matrix to vertex shader
   const int proj3DLoc = glGetUniformLocation(shaderProgram, "projTo2D");
   glUniformMatrix4fv(proj3DLoc, 1, GL_FALSE, glm::value_ptr(projTo2D));
-
-  // Give 4D projection matrix to vertex shader
-  const int proj4DLoc = glGetUniformLocation(shaderProgram, "projTo3D");
-  glUniform1fv(proj4DLoc, sizeof(float) * 25, projTo3D);
 
   // Show wireframes when enabled
   glPolygonMode(GL_FRONT_AND_BACK, showWireframe ? GL_LINE : GL_FILL);
@@ -475,6 +461,7 @@ App::Viewer::tweakRotation(float& angle, bool& spin, float& base,
 
   // Allow user to specify spin
   ImGui::Checkbox("Spin", &spin);
+  ImGui::SameLine();
 
   // If not spinning, allow user to adjust angle directly
   if (!spin) {
@@ -491,7 +478,8 @@ App::Viewer::tweakRotation(float& angle, bool& spin, float& base,
 
   // Otherwise, adjust an offset and speed
   else {
-    ImGui::Text("Angle: %f", glm::degrees(angle));
+    float temp = glm::degrees(angle);
+    ImGui::DragFloat("Angle", &temp, 0.f);
     ImGui::DragFloat("Spin Offset", &offset, 0.1f);
     ImGui::SameLine();
     ImGui::DragFloat("Spin Speed", &speed, 0.001f);

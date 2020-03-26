@@ -15,7 +15,7 @@ App::Tesseract::Tesseract() {
   vertexCount = 0;
 
   // Create a unit tesseract
-  for (int w = 1; w < 3; ++w) {
+  for (int w = -1; w < 2; w += 2) {
     for (int z = -1; z < 2; z += 2) {
       for (int y = -1; y < 2; y += 2) {
         for (int x = -1; x < 2; x += 2) {
