@@ -96,6 +96,40 @@ App::Viewer::handleMouseScrollInput(double x, double y) {
 void 
 App::Viewer::update(double dt) {
 
+  // Increment angles
+  firstRotationAngle += dt * firstRotationSpeed;
+  while (firstRotationAngle > 999.f) {
+    firstRotationAngle -= 999.f;
+  }
+  secondRotationAngle += dt * secondRotationSpeed;
+  while (secondRotationAngle > 999.f) {
+    secondRotationAngle -= 999.f;
+  }
+
+  if (object != nullptr && spinFirstRotation) {
+    float rot = glm::degrees(firstRotationOffset) + 
+        glm::degrees(firstRotationAngle);
+    while (rot < -180.f) {
+      rot = 180.f + (rot + 180.f);
+    }
+    while (rot > 180.f) {
+      rot = -180.f + (rot - 180.f);
+    }
+    object->firstRotation = glm::radians(rot);
+  }
+
+  if (object != nullptr && spinSecondRotation && object->enableDoubleRotation) {
+    float rot = glm::degrees(secondRotationOffset) + 
+        glm::degrees(secondRotationAngle);
+    while (rot < -180.f) {
+      rot = 180.f + (rot + 180.f);
+    }
+    while (rot > 180.f) {
+      rot = -180.f + (rot - 180.f);
+    }
+    object->secondRotation = glm::radians(rot);
+  }
+
   // Get window from the engine
   GLFWwindow* window = engine.getWindow();
   if (window == nullptr) {
@@ -382,6 +416,39 @@ App::Viewer::handleImgui() {
           ImGui::EndTabItem();
         }
 
+        if (ImGui::BeginTabItem("Rotation")) {
+          ImGui::PushItemWidth(60);
+          static const char* types[6] = {
+            "XY", "XZ", "XW", "YZ", "YW", "ZW"};
+          ImGui::Combo("Rotation type", (int*)&object->rotationType,
+              types, IM_ARRAYSIZE(types));
+          ImGui::SameLine();
+          ImGui::Checkbox("Double rotation", &object->enableDoubleRotation);
+          if (!object->enableDoubleRotation) {
+            ImGui::Text("Rotation:");
+            tweakRotation(object->firstRotation,
+                spinFirstRotation, firstRotationAngle, 
+                firstRotationOffset, firstRotationSpeed);
+          }
+          else {
+            ImGui::Text("First rotation:");
+            ImGui::PushID(0);
+            tweakRotation(object->firstRotation,
+                spinFirstRotation, firstRotationAngle, 
+                firstRotationOffset, firstRotationSpeed);
+            ImGui::Spacing();
+            ImGui::PopID();
+            ImGui::Text("Second rotation:");
+            ImGui::PushID(1);
+            tweakRotation(object->secondRotation,
+                spinSecondRotation, secondRotationAngle, 
+                secondRotationOffset, secondRotationSpeed);
+            ImGui::PopID();
+          }
+          ImGui::PopItemWidth();
+          ImGui::EndTabItem();
+        }
+
         ImGui::EndTabBar();
       }
 
@@ -398,6 +465,36 @@ App::Viewer::handleImgui() {
   // Show imgui demo
   if (showDemoWindow) {
     ImGui::ShowDemoWindow(&showDemoWindow);
+  }
+}
+
+// Create rotation widget for imgui
+void 
+App::Viewer::tweakRotation(float& angle, bool& spin, float& base, 
+    float& offset, float& speed) {
+
+  // Allow user to specify spin
+  ImGui::Checkbox("Spin", &spin);
+
+  // If not spinning, allow user to adjust angle directly
+  if (!spin) {
+    float rot = glm::degrees(angle);
+    ImGui::DragFloat("Angle", &rot, 0.1f);
+    while (rot < -180.f) {
+      rot = 180.f + (rot + 180.f);
+    }
+    while (rot > 180.f) {
+      rot = -180.f + (rot - 180.f);
+    }
+    angle = glm::radians(rot);
+  }
+
+  // Otherwise, adjust an offset and speed
+  else {
+    ImGui::Text("Angle: %f", glm::degrees(angle));
+    ImGui::DragFloat("Spin Offset", &offset, 0.1f);
+    ImGui::SameLine();
+    ImGui::DragFloat("Spin Speed", &speed, 0.001f);
   }
 }
 

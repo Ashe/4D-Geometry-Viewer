@@ -209,8 +209,62 @@ App::Tesseract::updateTransform(double dt) {
     }
   }
 
+  // Recreate rotation matrices
+  for(unsigned int j = 0; j < 5; ++j) {
+    for(unsigned int i = 0; i < 5; ++i) {
+      rotationMatrix[j][i] = i == j ? 1.f : 0.f;
+    }
+  }
+  
+  switch (rotationType) {
+
+    case RotationType::XY:
+      applyRotation(firstRotation, 0, 1);
+      if (enableDoubleRotation) {
+        applyRotation(secondRotation, 2, 3);
+      }
+      break;
+
+    case RotationType::XZ:
+      applyRotation(firstRotation, 0, 2);
+      if (enableDoubleRotation) {
+        applyRotation(secondRotation, 1, 3);
+      }
+      break;
+
+    case RotationType::XW:
+      applyRotation(firstRotation, 0, 3);
+      if (enableDoubleRotation) {
+        applyRotation(secondRotation, 1, 2);
+      }
+      break;
+
+    case RotationType::YZ:
+      applyRotation(firstRotation, 1, 2);
+      if (enableDoubleRotation) {
+        applyRotation(secondRotation, 0, 3);
+      }
+      break;
+
+    case RotationType::YW:
+      applyRotation(firstRotation, 1, 3);
+      if (enableDoubleRotation) {
+        applyRotation(secondRotation, 0, 2);
+      }
+      break;
+
+    case RotationType::ZW:
+      applyRotation(firstRotation, 2, 3);
+      if (enableDoubleRotation) {
+        applyRotation(secondRotation, 0, 1);
+      }
+      break;
+  }
+
+
   // Combine matrices to make transform
   mult(transform, translationMatrix, transform);
+  mult(transform, rotationMatrix, transform);
   mult(transform, scaleMatrix, transform);
 }
 
@@ -221,6 +275,9 @@ App::Tesseract::resetTransform() {
   // Reset transform values to sane defaults
   position = glm::vec4(0.f, 0.f, 0.f, 0.f);
   scale = glm::vec4(1.f, 1.f, 1.f, 1.f);
+  firstRotation = 0.f;
+  secondRotation = 0.f;
+  enableDoubleRotation = false;
 
   // Recreate the transform using these new values
   updateTransform();
@@ -256,4 +313,15 @@ App::Tesseract::mult(float out[5][5], float a[5][5], float b[5][5]) {
       out[j][i] = temp[j][i];
     }
   }
+}
+
+// Rotate around any plane
+void
+App::Tesseract::applyRotation(float angle, unsigned int a, unsigned int b) {
+  const float c = glm::cos(angle);
+  const float s = glm::sin(angle);
+  rotationMatrix[a][a] = c;
+  rotationMatrix[a][b] = -s;
+  rotationMatrix[b][a] = s;
+  rotationMatrix[b][b] = c;
 }

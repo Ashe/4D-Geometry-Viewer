@@ -8,6 +8,17 @@
 
 namespace App {
 
+
+  // Different rotations
+  enum RotationType {
+    XY,
+    XZ,
+    XW,
+    YZ,
+    YW,
+    ZW
+  };
+
   // Store information necessary to render a 4D cube
   class Tesseract {
 
@@ -21,6 +32,12 @@ namespace App {
       // Transform values
       glm::vec4 position;
       glm::vec4 scale;
+
+      // Rotation settings
+      RotationType rotationType = RotationType::XY;
+      bool enableDoubleRotation = false;
+      float firstRotation = 0.f;
+      float secondRotation = 0.f;
 
       // Push vertices to buffers for rendering
       void updateVertices();
@@ -51,9 +68,13 @@ namespace App {
       float transform[5][5];
       float translationMatrix[5][5];
       float scaleMatrix[5][5];
+      float rotationMatrix[5][5];
 
       // Multiply two 5x5 matrices together
       static void mult(float out[5][5], float a[5][5], float b[5][5]);
+
+      // Modify rotation matrix for specific planes
+      void applyRotation(float angle, unsigned int axisA, unsigned int axisB);
   };
 }
 

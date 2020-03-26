@@ -69,6 +69,20 @@ namespace App {
       bool showTransformWindow = true;
       bool showDemoWindow = false;
 
+      // Rotation helpers
+      bool spinFirstRotation = false;
+      float firstRotationAngle = 0.f;
+      float firstRotationSpeed = 1.f;
+      float firstRotationOffset = 0.f;
+      bool spinSecondRotation = false;
+      float secondRotationAngle = 0.f;
+      float secondRotationSpeed = 1.f;
+      float secondRotationOffset = 0.f;
+
+      // Create rotation widget for imgui
+      static void tweakRotation(float& angle, bool& spin, float& base, 
+          float& offset, float& speed);
+
       // Place camera back into a normal position
       void resetCameraPosition();
   };
