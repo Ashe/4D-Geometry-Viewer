@@ -17,8 +17,9 @@ namespace App {
 
     public:
 
+      // Configuration of this camera
       glm::vec4 position = glm::vec4(0.f, 0.f, 0.f, 0.f);
-      glm::vec4 target = glm::vec4(1.f, 0.f, 0.f, 0.f);
+      glm::vec4 target = glm::vec4(0.f, 0.f, 0.f, 1.f);
       glm::vec4 up = glm::vec4(0.f, 1.f, 0.f, 0.f);
       glm::vec4 over = glm::vec4(0.f, 0.f, 1.f, 0.f);
 
@@ -30,7 +31,7 @@ namespace App {
       // The view matrix to be retrieved from this camera
       float transform[5][5];
 
-      // Four-dimensional cross product of three vectargetrs
+      // Four-dimensional cross product of three vectors
       static glm::vec4 cross4(glm::vec4 a, glm::vec4 b, glm::vec4 c);
   };
 }

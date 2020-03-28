@@ -7,28 +7,28 @@
 float*
 App::Camera4D::getViewMatrix() {
 
-  glm::vec4 wd = target - position;
-  wd = glm::normalize(wd);
+  // Calculate components of view matrix
+  glm::vec4 d = target - position;
+  d = glm::normalize(d);
+  glm::vec4 a = cross4(up, over, d);
+  a = glm::normalize(a);
+  glm::vec4 b = cross4(over, d, a);
+  b = glm::normalize(b);
+  glm::vec4 c = cross4(d, a, b);
 
-  glm::vec4 wa = cross4(up, over, wd);
-  wa = glm::normalize(wa);
-
-  glm::vec4 wb = cross4(over, wd, wa);
-  wb = glm::normalize(wb);
-
-  glm::vec4 wc = cross4(wd, wa, wb);
-
-  glm::mat4 m = glm::mat4(wc, wd, wa, wb);
-
-  // Prepare the final matrix
+  // Create the final matrix
   for (int j = 0; j < 5; ++j) {
     for (int i = 0; i < 5; ++i) {
+      float value = i == j ? 1.f : 0.f;
       if (i < 4 && j < 4) {
-        transform[j][i] = m[j][i];
+        switch (j) {
+          case 0: value = a[i]; break;
+          case 1: value = b[i]; break;
+          case 2: value = c[i]; break;
+          case 3: value = d[i]; break;
+        }
       }
-      else {
-        transform[j][i] = i == j ? 1.f : 0.f;
-      }
+      transform[j][i] = value;
     }
   }
 
@@ -36,7 +36,7 @@ App::Camera4D::getViewMatrix() {
   return (float*)transform;
 }
 
-// Four-dimensional cross product of three vectargetrs
+// Four-dimensional cross product of three vectors
 glm::vec4 
 App::Camera4D::cross4(glm::vec4 a, glm::vec4 b, glm::vec4 c) {
 
