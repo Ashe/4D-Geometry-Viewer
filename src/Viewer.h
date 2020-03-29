@@ -11,9 +11,9 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Camera4D.h"
-#include "Tesseract.h"
 #include "shaders/Vertex.h"
 #include "shaders/Fragment.h"
+#include "polytopes/Tesseract.h"
 
 namespace App {
 

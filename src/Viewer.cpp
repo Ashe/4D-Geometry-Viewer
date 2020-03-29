@@ -204,7 +204,7 @@ App::Viewer::update(double dt) {
 
   // Finally, update the transform of the object
   if (object != nullptr) {
-    object->updateTransform(dt);
+    object->updateTransform();
   }
 }
 
