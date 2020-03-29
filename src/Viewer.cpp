@@ -288,6 +288,7 @@ App::Viewer::handleImgui() {
     if (ImGui::BeginMenu("Window")) {
       ImGui::MenuItem("3D Camera properties", NULL, &show3DCameraWindow);
       ImGui::MenuItem("4D Camera properties", NULL, &show4DCameraWindow);
+      ImGui::MenuItem("Polytope Information", NULL, &showPolytopeInfoWindow);
       ImGui::MenuItem("ImGui demo", NULL, &showDemoWindow);
       ImGui::EndMenu();
     }
