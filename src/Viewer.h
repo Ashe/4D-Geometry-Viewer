@@ -8,12 +8,15 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <glm/matrix.hpp>
+
 #include "Scene.h"
 #include "Camera.h"
 #include "Camera4D.h"
+
 #include "shaders/Vertex.h"
 #include "shaders/Fragment.h"
-#include "polytopes/Tesseract.h"
+
+#include "polytopes/Hypercube.h"
 
 namespace App {
 
@@ -51,7 +54,10 @@ namespace App {
       unsigned int shaderProgram;
 
       // Current object to render
-      std::unique_ptr<Tesseract> object;
+      Polytope* polytope;
+
+      // Polytopes to choose from
+      Hypercube hypercube;
 
       // The camera for viewing the world
       Camera camera;
@@ -67,6 +73,7 @@ namespace App {
       bool show3DCameraWindow = true;
       bool show4DCameraWindow = true;
       bool showTransformWindow = true;
+      bool showPolytopeInfoWindow = true;
       bool showDemoWindow = false;
 
       // Rotation helpers

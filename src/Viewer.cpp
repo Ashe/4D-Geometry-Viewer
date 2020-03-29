@@ -49,7 +49,7 @@ App::Viewer::Viewer(Engine& e) : Scene(e) {
       printf("[Error] Failed to link shader program.\n - %s\n", infoLog);
   }
 
-  // Delete shader objects now they aren't in use
+  // Delete shader polytopes now they aren't in use
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 
@@ -58,11 +58,11 @@ App::Viewer::Viewer(Engine& e) : Scene(e) {
   ////////////
 
   // Intialise the cameras
-  camera = Camera(glm::vec3(0.f, 1.f, 5.f));
+  camera = Camera(glm::vec3(0.f, 0.f, 5.f));
   camera4D = Camera4D();
 
-  // Initialise tesseract
-  object = std::make_unique<Tesseract>();
+  // Initially select the hypercube
+  polytope = &hypercube;
 }
 
 // Handle keyboard input for keybindings
@@ -75,7 +75,6 @@ App::Viewer::handleKeyboardInput(int key, int scan, int action, int mods) {
     // Control modifier keybindings
     if (mods == GLFW_MOD_CONTROL) {
       switch(key) {
-        case GLFW_KEY_W: showWireframe ^= 1; break;
       }
     }
 
@@ -106,28 +105,31 @@ App::Viewer::update(double dt) {
     secondRotationAngle -= 999.f;
   }
 
-  if (object != nullptr && spinFirstRotation) {
-    float rot = glm::degrees(firstRotationOffset) + 
-        glm::degrees(firstRotationAngle);
-    while (rot < -180.f) {
-      rot = 180.f + (rot + 180.f);
+  // Update the polytope
+  if (polytope != nullptr) {
+    if (spinFirstRotation) {
+      float rot = glm::degrees(firstRotationOffset) + 
+          glm::degrees(firstRotationAngle);
+      while (rot < -180.f) {
+        rot = 180.f + (rot + 180.f);
+      }
+      while (rot > 180.f) {
+        rot = -180.f + (rot - 180.f);
+      }
+      polytope->firstRotation = glm::radians(rot);
     }
-    while (rot > 180.f) {
-      rot = -180.f + (rot - 180.f);
-    }
-    object->firstRotation = glm::radians(rot);
-  }
 
-  if (object != nullptr && spinSecondRotation && object->enableDoubleRotation) {
-    float rot = glm::degrees(secondRotationOffset) + 
-        glm::degrees(secondRotationAngle);
-    while (rot < -180.f) {
-      rot = 180.f + (rot + 180.f);
+    if (spinSecondRotation && polytope->enableDoubleRotation) {
+      float rot = glm::degrees(secondRotationOffset) + 
+          glm::degrees(secondRotationAngle);
+      while (rot < -180.f) {
+        rot = 180.f + (rot + 180.f);
+      }
+      while (rot > 180.f) {
+        rot = -180.f + (rot - 180.f);
+      }
+      polytope->secondRotation = glm::radians(rot);
     }
-    while (rot > 180.f) {
-      rot = -180.f + (rot - 180.f);
-    }
-    object->secondRotation = glm::radians(rot);
   }
 
   // Get window from the engine
@@ -202,9 +204,9 @@ App::Viewer::update(double dt) {
     }
   }
 
-  // Finally, update the transform of the object
-  if (object != nullptr) {
-    object->updateTransform();
+  // Finally, update the transform of the polytope
+  if (polytope != nullptr) {
+    polytope->updateTransform();
   }
 }
 
@@ -240,14 +242,14 @@ App::Viewer::render() {
   glUseProgram(shaderProgram);
 
   // Render the tesseract
-  if (object != nullptr) {
+  if (polytope != nullptr) {
 
-    // Give OpenGL transform of object
+    // Give OpenGL transform of polytope
     const int trans = glGetUniformLocation(shaderProgram, "transform");
-    glUniform1fv(trans, sizeof(float) * 25, object->getTransform());
+    glUniform1fv(trans, sizeof(float) * 25, polytope->getTransform());
 
-    // Render object
-    object->render();
+    // Render polytope
+    polytope->render();
   }
 }
 
@@ -259,15 +261,16 @@ App::Viewer::handleImgui() {
   if (ImGui::BeginMainMenuBar()) {
 
     // File menu
-    if (ImGui::BeginMenu("File")) {
+    if (ImGui::BeginMenu("Polytopes")) {
+      if (ImGui::MenuItem("Hypercube")) { polytope = &hypercube; }
       ImGui::EndMenu();
     }
 
     // View menu
-    if (ImGui::BeginMenu("View")) {
-      ImGui::MenuItem("Show wireframes", "CTRL + W", &showWireframe);
+    if (ImGui::BeginMenu("Window")) {
       ImGui::MenuItem("3D Camera properties", NULL, &show3DCameraWindow);
       ImGui::MenuItem("4D Camera properties", NULL, &show4DCameraWindow);
+      ImGui::MenuItem("ImGui demo", NULL, &showDemoWindow);
       ImGui::EndMenu();
     }
 
@@ -361,11 +364,11 @@ App::Viewer::handleImgui() {
   }
 
   // Transform matrix
-  if (object != nullptr && showTransformWindow) {
+  if (polytope != nullptr && showTransformWindow) {
     if (ImGui::Begin("Transform", &showTransformWindow)) {
 
       // Allow viewing of transform matrix
-      const float* const transform = object->getTransform();
+      const float* const transform = polytope->getTransform();
       ImGui::PushItemWidth(60);
       for(unsigned int j = 0; j < 5; ++j) {
         for(unsigned int i = 0; i < 5; ++i) {
@@ -384,49 +387,47 @@ App::Viewer::handleImgui() {
 
         if (ImGui::BeginTabItem("Position")) {
           ImGui::PushItemWidth(60);
-          ImGui::DragFloat("x", &object->position.x, 0.1f); ImGui::SameLine();
-          ImGui::DragFloat("y", &object->position.y, 0.1f); ImGui::SameLine();
-          ImGui::DragFloat("z", &object->position.z, 0.1f); ImGui::SameLine();
-          ImGui::DragFloat("w", &object->position.w, 0.1f);
+          ImGui::DragFloat("x", &polytope->position.x, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("y", &polytope->position.y, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("z", &polytope->position.z, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("w", &polytope->position.w, 0.1f);
           ImGui::PopItemWidth();
           ImGui::EndTabItem();
         }
 
         if (ImGui::BeginTabItem("Scale")) {
           ImGui::PushItemWidth(60);
-          ImGui::DragFloat("x", &object->scale.x, 0.1f); ImGui::SameLine();
-          ImGui::DragFloat("y", &object->scale.y, 0.1f); ImGui::SameLine();
-          ImGui::DragFloat("z", &object->scale.z, 0.1f); ImGui::SameLine();
-          ImGui::DragFloat("w", &object->scale.w, 0.1f);
+          ImGui::DragFloat("x", &polytope->scale.x, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("y", &polytope->scale.y, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("z", &polytope->scale.z, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("w", &polytope->scale.w, 0.1f);
           ImGui::PopItemWidth();
           ImGui::EndTabItem();
         }
 
         if (ImGui::BeginTabItem("Rotation")) {
           ImGui::PushItemWidth(60);
-          static const char* types[6] = {
-            "XY", "XZ", "XW", "YZ", "YW", "ZW"};
-          ImGui::Combo("Rotation type", (int*)&object->rotationType,
-              types, IM_ARRAYSIZE(types));
+          ImGui::Combo("Rotation type", (int*)&polytope->rotationType,
+              rotationTypes, IM_ARRAYSIZE(rotationTypes));
           ImGui::SameLine();
-          ImGui::Checkbox("Double rotation", &object->enableDoubleRotation);
-          if (!object->enableDoubleRotation) {
+          ImGui::Checkbox("Double rotation", &polytope->enableDoubleRotation);
+          if (!polytope->enableDoubleRotation) {
             ImGui::Text("Rotation:");
-            tweakRotation(object->firstRotation,
+            tweakRotation(polytope->firstRotation,
                 spinFirstRotation, firstRotationAngle, 
                 firstRotationOffset, firstRotationSpeed);
           }
           else {
             ImGui::Text("First rotation:");
             ImGui::PushID(0);
-            tweakRotation(object->firstRotation,
+            tweakRotation(polytope->firstRotation,
                 spinFirstRotation, firstRotationAngle, 
                 firstRotationOffset, firstRotationSpeed);
             ImGui::Spacing();
             ImGui::PopID();
             ImGui::Text("Second rotation:");
             ImGui::PushID(1);
-            tweakRotation(object->secondRotation,
+            tweakRotation(polytope->secondRotation,
                 spinSecondRotation, secondRotationAngle, 
                 secondRotationOffset, secondRotationSpeed);
             ImGui::PopID();
@@ -442,8 +443,16 @@ App::Viewer::handleImgui() {
       ImGui::Separator();
       ImGui::Spacing();
       if (ImGui::Button("Reset transform")) {
-        object->resetTransform();
+        polytope->resetTransform();
       }
+      ImGui::End();
+    }
+  }
+
+  // Show information about the current polytope
+  if (polytope != nullptr && showPolytopeInfoWindow) {
+    if (ImGui::Begin("Polytope info", &showPolytopeInfoWindow)) {
+      polytope->showPolytopeInfo();
       ImGui::End();
     }
   }
