@@ -4,6 +4,7 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
+#include <math.h>
 #include <memory>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>

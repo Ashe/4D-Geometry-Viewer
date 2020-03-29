@@ -163,7 +163,7 @@ App::Polytope::resetTransform() {
 
   // Reset transform values to sane defaults
   position = glm::vec4(0.f, 0.f, 0.f, 0.f);
-  scale = glm::vec4(1.f, 1.f, 1.f, 1.f);
+  scaleTarget = glm::vec4(1.f, 1.f, 1.f, 1.f);
   firstRotation = 0.f;
   secondRotation = 0.f;
   enableDoubleRotation = false;

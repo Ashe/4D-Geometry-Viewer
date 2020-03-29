@@ -22,6 +22,7 @@ namespace App {
       // Transform values
       glm::vec4 position;
       glm::vec4 scale;
+      glm::vec4 scaleTarget;
 
       // Rotation values
       RotationType rotationType = RotationType::XY;

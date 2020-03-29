@@ -121,7 +121,7 @@ App::Hypercube::showPolytopeInfo() {
   // Point
   ImGui::Separator(); 
   if (ImGui::Button("Point / Monon")) {
-    scale = glm::vec4(0.f, 0.f, 0.f, 0.f);
+    scaleTarget = glm::vec4(0.f, 0.f, 0.f, 0.f);
   }
   ImGui::NextColumn();
   ImGui::Text("1"); ImGui::NextColumn();
@@ -132,7 +132,7 @@ App::Hypercube::showPolytopeInfo() {
   // Line segment
   ImGui::Separator(); 
   if (ImGui::Button("Line / Dion")) {
-    scale = glm::vec4(1.f, 0.f, 0.f, 0.f);
+    scaleTarget = glm::vec4(1.f, 0.f, 0.f, 0.f);
   }
   ImGui::NextColumn();
   ImGui::Text("2"); ImGui::NextColumn();
@@ -144,7 +144,7 @@ App::Hypercube::showPolytopeInfo() {
   // Square
   ImGui::Separator(); 
   if (ImGui::Button("Square / Tetragon")) {
-    scale = glm::vec4(1.f, 1.f, 0.f, 0.f);
+    scaleTarget = glm::vec4(1.f, 1.f, 0.f, 0.f);
   }
   ImGui::NextColumn();
   ImGui::Text("4"); ImGui::NextColumn();
@@ -157,7 +157,7 @@ App::Hypercube::showPolytopeInfo() {
   // Cube
   ImGui::Separator(); 
   if (ImGui::Button("Cube / Hexahedron")) {
-    scale = glm::vec4(1.f, 1.f, 1.f, 0.f);
+    scaleTarget = glm::vec4(1.f, 1.f, 1.f, 0.f);
   }
   ImGui::NextColumn();
   ImGui::Text("8"); ImGui::NextColumn();
@@ -171,7 +171,7 @@ App::Hypercube::showPolytopeInfo() {
   // Tesseract
   ImGui::Separator(); 
   if (ImGui::Button("Tesseract / Octachoron")) {
-    scale = glm::vec4(1.f, 1.f, 1.f, 1.f);
+    scaleTarget = glm::vec4(1.f, 1.f, 1.f, 1.f);
   }
   ImGui::NextColumn();
   ImGui::Text("16"); ImGui::NextColumn();

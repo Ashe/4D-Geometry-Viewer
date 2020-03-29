@@ -204,8 +204,14 @@ App::Viewer::update(double dt) {
     }
   }
 
-  // Finally, update the transform of the polytope
+  // Finally, update polytope
   if (polytope != nullptr) {
+
+    // Tween the target scale
+    glm::vec4& scale = polytope->scale;
+    scale += (polytope->scaleTarget - scale) * 1.5f * (float)dt;
+
+    // Finalise transformations for rendering
     polytope->updateTransform();
   }
 }
@@ -397,10 +403,10 @@ App::Viewer::handleImgui() {
 
         if (ImGui::BeginTabItem("Scale")) {
           ImGui::PushItemWidth(60);
-          ImGui::DragFloat("x", &polytope->scale.x, 0.1f); ImGui::SameLine();
-          ImGui::DragFloat("y", &polytope->scale.y, 0.1f); ImGui::SameLine();
-          ImGui::DragFloat("z", &polytope->scale.z, 0.1f); ImGui::SameLine();
-          ImGui::DragFloat("w", &polytope->scale.w, 0.1f);
+          ImGui::DragFloat("x", &polytope->scaleTarget.x, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("y", &polytope->scaleTarget.y, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("z", &polytope->scaleTarget.z, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("w", &polytope->scaleTarget.w, 0.1f);
           ImGui::PopItemWidth();
           ImGui::EndTabItem();
         }
