@@ -63,6 +63,9 @@ App::Viewer::Viewer(Engine& e) : Scene(e) {
 
   // Initially select the hypercube
   polytope = &hypercube;
+  polytope->resetTransform();
+  polytope->scale = glm::vec4(0.f, 0.f, 0.f, 0.f);
+  polytope->scaleTarget = glm::vec4(1.f, 1.f, 1.f, 1.f);
 }
 
 // Handle keyboard input for keybindings
@@ -268,7 +271,16 @@ App::Viewer::handleImgui() {
 
     // File menu
     if (ImGui::BeginMenu("Polytopes")) {
-      if (ImGui::MenuItem("Hypercube")) { polytope = &hypercube; }
+      if (ImGui::MenuItem("Simplex")) { 
+        polytope = &simplex; 
+        polytope->resetTransform();
+        polytope->scale = glm::vec4(0.f, 0.f, 0.f, 0.f);
+      }
+      if (ImGui::MenuItem("Hypercube")) { 
+        polytope = &hypercube; 
+        polytope->resetTransform();
+        polytope->scale = glm::vec4(0.f, 0.f, 0.f, 0.f);
+      }
       ImGui::EndMenu();
     }
 

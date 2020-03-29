@@ -43,7 +43,7 @@ App::Polytope::render() {
   // Ensure that there is enough information to render the object
   if (vertices == nullptr || indices == nullptr ||
       vertexCount == 0 || indexCount == 0) {
-    printf("[Error] Tesseract vertices or indices not initialised.\n");
+    printf("[Error] Polytope vertices or indices not initialised.\n");
     return;
   }
 
@@ -185,6 +185,7 @@ App::Polytope::updateVertices(unsigned int renderMode,
 
   // Only do this when vertex and index data is present
   if (vertices == nullptr || indices == nullptr) {
+    printf("[Error] Polytope vertices or indices not initialised.\n");
     return;
   }
 

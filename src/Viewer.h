@@ -18,6 +18,7 @@
 #include "shaders/Fragment.h"
 
 #include "polytopes/Hypercube.h"
+#include "polytopes/Simplex.h"
 
 namespace App {
 
@@ -59,6 +60,7 @@ namespace App {
 
       // Polytopes to choose from
       Hypercube hypercube;
+      Simplex simplex;
 
       // The camera for viewing the world
       Camera camera;

@@ -7,7 +7,6 @@
 App::Hypercube::Hypercube() : Polytope() {
 
   // Generate vertices
-  printf("Constructing Hypercube..\n");
   vertices = new float[2 * 2 * 2 * 2 * 4];
   unsigned int vertexCount = 0;
 
@@ -27,11 +26,8 @@ App::Hypercube::Hypercube() : Polytope() {
     }
   }
 
-  // Record how many vertices were created
-  printf("Generated %u vertices (16 expected)..\n", vertexCount / 4);
-
   // Generate indices (lines)
-  indices = new unsigned int[100];
+  indices = new unsigned int[32 * 2];
   unsigned int indexCount = 0;
 
   // Connect all cube vertices
@@ -85,9 +81,6 @@ App::Hypercube::Hypercube() : Polytope() {
     }
   }
 
-  // Record how many indices were created
-  printf("Generated %u indices (32 expected)..\n", indexCount / 2);
-
   // Push generated vertices to these buffers
   updateVertices(GL_LINES, vertexCount, indexCount);
 }
@@ -96,9 +89,12 @@ App::Hypercube::Hypercube() : Polytope() {
 void
 App::Hypercube::showPolytopeInfo() {
 
+  // Prepare to show types of hypercubes
+  static bool showTechnicalNames = false;
+
   // Show table of hypercubes
   ImGui::Columns(6, NULL, true);
-  ImGui::SetColumnWidth(0, 175.0f);
+  ImGui::SetColumnWidth(0, 155.0f);
   ImGui::Separator();
   ImGui::Text("Hypercube");
   ImGui::NextColumn();
@@ -111,7 +107,9 @@ App::Hypercube::showPolytopeInfo() {
   }
 
   // Show all dimension descriptions
-  ImGui::Separator(); ImGui::NextColumn();
+  ImGui::Separator(); 
+  ImGui::Checkbox("Technical names", &showTechnicalNames);
+  ImGui::NextColumn();
   ImGui::Text("Vertex"); ImGui::NextColumn();
   ImGui::Text("Edge"); ImGui::NextColumn();
   ImGui::Text("Face"); ImGui::NextColumn();
@@ -120,7 +118,7 @@ App::Hypercube::showPolytopeInfo() {
 
   // Point
   ImGui::Separator(); 
-  if (ImGui::Button("Point / Monon")) {
+  if (ImGui::Button(!showTechnicalNames ? "Point" : "Monon")) {
     scaleTarget = glm::vec4(0.f, 0.f, 0.f, 0.f);
   }
   ImGui::NextColumn();
@@ -129,9 +127,9 @@ App::Hypercube::showPolytopeInfo() {
     ImGui::NextColumn();
   }
 
-  // Line segment
+  // Line Segment
   ImGui::Separator(); 
-  if (ImGui::Button("Line / Dion")) {
+  if (ImGui::Button(!showTechnicalNames ? "Line Segment" : "Dion")) {
     scaleTarget = glm::vec4(1.f, 0.f, 0.f, 0.f);
   }
   ImGui::NextColumn();
@@ -143,7 +141,7 @@ App::Hypercube::showPolytopeInfo() {
 
   // Square
   ImGui::Separator(); 
-  if (ImGui::Button("Square / Tetragon")) {
+  if (ImGui::Button(!showTechnicalNames ? "Square" : "Tetragon")) {
     scaleTarget = glm::vec4(1.f, 1.f, 0.f, 0.f);
   }
   ImGui::NextColumn();
@@ -156,7 +154,7 @@ App::Hypercube::showPolytopeInfo() {
 
   // Cube
   ImGui::Separator(); 
-  if (ImGui::Button("Cube / Hexahedron")) {
+  if (ImGui::Button(!showTechnicalNames ? "Cube" : "Hexahedron")) {
     scaleTarget = glm::vec4(1.f, 1.f, 1.f, 0.f);
   }
   ImGui::NextColumn();
@@ -170,7 +168,7 @@ App::Hypercube::showPolytopeInfo() {
 
   // Tesseract
   ImGui::Separator(); 
-  if (ImGui::Button("Tesseract / Octachoron")) {
+  if (ImGui::Button(!showTechnicalNames ? "Tesseract" : "Octachoron")) {
     scaleTarget = glm::vec4(1.f, 1.f, 1.f, 1.f);
   }
   ImGui::NextColumn();
