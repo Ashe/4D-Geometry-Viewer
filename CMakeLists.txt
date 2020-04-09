@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.7)
 project(App)
 
+# Export compilation commands to JSON file
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Messages to check everything is working
 message("Using CMake version ${CMAKE_VERSION}")
 message("Processing CMakeLists.txt")
@@ -32,4 +35,3 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   glbinding::glbinding
   glm
   imgui)
-

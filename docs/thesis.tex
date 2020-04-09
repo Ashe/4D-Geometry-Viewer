@@ -1,0 +1,84 @@
+\documentclass[11pt, a4paper]{report}
+\usepackage[left=40mm, right=20mm, top=20mm, bottom=20mm, includefoot]{geometry}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage[english]{babel}
+\usepackage[autostyle]{csquotes}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{array}
+\usepackage[toc, title, page]{appendix}
+\usepackage{pdfpages}
+\usepackage[style=apa, backend=biber, language=english]{biblatex}
+\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+
+\addbibresource{sources.bib}
+\setlength{\parindent}{0ex}
+\setlength{\parskip}{1.5ex}
+\font\titlefont=cmr10 at 18pt
+\MakeOuterQuote{"}
+
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\flushleft\hyphenpenalty=10000}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{0pt}{40pt}
+
+\lstset{
+  frame=tb, % draw a frame at the top and bottom of the code block
+  tabsize=4, % tab space width
+  showstringspaces=false, % don't mark spaces in strings
+  numbers=left, % display line numbers on the left
+  basicstyle=\linespread{0.85}\selectfont,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+  commentstyle=\color{olive}, % comment color
+  keywordstyle=\color{blue}, % keyword color
+  stringstyle=\color{red} % string color
+}
+
+\linespread{1.5}
+\begin{document}
+
+\title{\titlefont 4D Geometry rendering assignment}
+\author{Ashley Smith}
+\date{\today}
+\maketitle
+\thispagestyle{empty}
+
+\renewcommand\abstractname{\textbf{Abstract}}
+\begin{abstract}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\end{abstract}
+
+\cleardoublepage
+\setcounter{page}{1}
+\pagenumbering{roman}
+\tableofcontents
+
+\cleardoublepage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\chapter{A chapter}
+
+\section{A section}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+\cleardoublepage
+\printbibliography[
+  heading=bibintoc,
+  title={Bibliography}
+]
+
+\cleardoublepage
+\begin{appendices}
+
+\chapter{Apprendix 1}
+\section{An appendix section}
+
+It's an appendix
+
+\end{appendices}
+
+\end{document}

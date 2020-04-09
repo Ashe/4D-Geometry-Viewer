@@ -271,15 +271,23 @@ App::Viewer::handleImgui() {
 
     // File menu
     if (ImGui::BeginMenu("Polytopes")) {
+      bool switched = false;
       if (ImGui::MenuItem("Simplex")) { 
         polytope = &simplex; 
-        polytope->resetTransform();
-        polytope->scale = glm::vec4(0.f, 0.f, 0.f, 0.f);
+        switched = true;
       }
       if (ImGui::MenuItem("Hypercube")) { 
         polytope = &hypercube; 
+        switched = true;
+      }
+      if (ImGui::MenuItem("Hyperoctahedron")) { 
+        polytope = &hyperoctahedron; 
+        switched = true;
+      }
+      if (switched) {
         polytope->resetTransform();
         polytope->scale = glm::vec4(0.f, 0.f, 0.f, 0.f);
+        polytope->scaleTarget = glm::vec4(1.f, 1.f, 1.f, 1.f);
       }
       ImGui::EndMenu();
     }
@@ -374,7 +382,7 @@ App::Viewer::handleImgui() {
 
       if (ImGui::Button("Reset")) {
         camera4D.position = glm::vec4(0.f, 0.f, 0.f, 0.f);
-        camera4D.target = glm::vec4(1.f, 0.f, 0.f, 0.f);
+        camera4D.target = glm::vec4(0.f, 0.f, 0.f, 1.f);
         camera4D.up = glm::vec4(0.f, 1.f, 0.f, 0.f);
         camera4D.over = glm::vec4(0.f, 0.f, 1.f, 0.f);
       }

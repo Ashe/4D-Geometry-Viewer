@@ -10,7 +10,7 @@ App::Hypercube::Hypercube() : Polytope() {
   vertices = new float[2 * 2 * 2 * 2 * 4];
   unsigned int vertexCount = 0;
 
-  // Create a unit tesseract
+  // Create a tesseract
   for (int w = -1; w < 2; w += 2) {
     for (int z = -1; z < 2; z += 2) {
       for (int y = -1; y < 2; y += 2) {
@@ -30,7 +30,7 @@ App::Hypercube::Hypercube() : Polytope() {
   indices = new unsigned int[32 * 2];
   unsigned int indexCount = 0;
 
-  // Connect all cube vertices
+  // Connect all tesseract vertices
   for (int w = 0; w < 2; ++w) {
 
     // Find which cube this vertex belongs to (inner or outer)
