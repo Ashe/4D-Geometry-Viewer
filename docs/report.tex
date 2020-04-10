@@ -1,5 +1,5 @@
-\documentclass[11pt, a4paper]{report}
-\usepackage[left=40mm, right=20mm, top=20mm, bottom=20mm, includefoot]{geometry}
+\documentclass[11pt, a4paper]{article}
+\usepackage[left=25mm, right=25mm, top=20mm, bottom=20mm, includefoot]{geometry}
 \usepackage{setspace}
 \usepackage{titlesec}
 \usepackage{graphicx}
@@ -45,10 +45,7 @@
 \maketitle
 \thispagestyle{empty}
 
-\renewcommand\abstractname{\textbf{Abstract}}
-\begin{abstract}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-\end{abstract}
+% Abstract goes here if desired
 
 \cleardoublepage
 \setcounter{page}{1}
@@ -59,11 +56,33 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 \pagenumbering{arabic}
 \setcounter{page}{1}
 
-\chapter{A chapter}
+\section{Background description (10\%)}
 
-\section{A section}
+END
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+- Describe chosen area with strong rationale for why its important to investigate
+- Describes the scope and purpose of deliverable and what I'm expecting to achieve
+- Describe the level of difficulty along with relevance of work to field of graphics / games
+
+\section{Standout elements (10\%)}
+
+- Describe standout elements (things considered important or critical, areas I'm proudest of, areas I struggled but then succeeded with)
+- Provide detail as to why they were important or how they relate to deliverable
+- Provide details, insight and rationale about the above
+
+\section{Design (30\%)}
+
+- Describe how the deliverable works in detail
+- Use appropriate and recognised notations and abstraction mechanisms
+- Clear and detailed evidence of the use of software engineering principles (software architecture)
+- Detail the graphical techniques or concepts employed and how they were implemented
+- Describe any algorithms that relate to delivarable
+
+\section{Implementation (10\%)}
+
+- Describe the process and approach of development along with any milestones
+- Comment on what happen in each step, what was overcome and what was learnt
+- Describe what steps would be useful in future projects and which ones wouldn't
 
 \cleardoublepage
 \printbibliography[
@@ -74,8 +93,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 \cleardoublepage
 \begin{appendices}
 
-\chapter{Apprendix 1}
-\section{An appendix section}
+\section{Something}
 
 It's an appendix
 
