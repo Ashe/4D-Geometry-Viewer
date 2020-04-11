@@ -70,15 +70,17 @@ It could be said that the transition to 3D was good for Risk of Rain \parencite*
 
 \subsection{3D to 4D: What will be achieved from this project?}
 
-If the third dimension can create new opportunities and conceptualise new gameplay and new mechanics, it does make one wonder about the possibilities that the fourth dimension may bring to gaming. With virtual reality and other technologies becoming more accessible and accepted as avenues of entertainment, the fourth dimension may not seem so experimental. In this project, I will be attempting to write my own 4D geometry viewer in an effort to lessen the gap between the third and fourth dimensions. While this project doesn't feature anything new, it is hoped that the development of this project is just as informative as the end result and that the approaches used to build this application will be of use to future developers wanting to pioneer the fourth dimension.
+If the third dimension can create new opportunities and conceptualise new gameplay and new mechanics, it does make one wonder about the possibilities that the fourth dimension may bring to gaming. With virtual reality and other technologies becoming more accessible and accepted as avenues of entertainment, the fourth dimension may not seem so experimental. In this project, I wrote my own 4D geometry viewer in an effort to lessen the gap between the third and fourth dimensions. While this project doesn't feature anything new, it is hoped that the development of this project is just as insightful and interesting as the end result and that the approaches used to build the application will be of use to future developers wanting to pioneer the fourth dimension.
+
+Video games are just as much about the feel of the world as they are about the look --- being able to perceive the world from different positions and angles and interact with it in various ways both contribute to how well a world has been crafted. I feel that this project benefits from user interaction in a similar way and will help users understand the fourth dimension better. 
+
+Instead of just displaying a 4D object, I wanted to allow the user to be in control of how the object is looked at and how it is transformed. These interactions are made with both keyboard shortcuts and an interactive menu. Users can move and rotate the camera to examine the 4D object, while a menu can be used to apply various translations, rotations and scales to the object. The combination of each of these transformations can be seen in a 5x5 matrix and their effects are applied to the 4D object and therefore forming the connection between how an object is transformed and how it appears --- something which may be confusing in the context of the fourth dimension.
+
+\subsection{4D to 2D: The challenges of visualising 4D}
 
 Visualising the fourth dimension in simulations and games isn't simple. 2D games can be seen as simplified 3D worlds, especially when art and rendering techniques are used to try and mimic the 3D world as seen in classic arcade games like After Burner \parencite{afterburner}. Humans are three-dimensional beings and as such we feel familiar with worlds that appear to be 3D even when looking at them through a two-dimensional display. When a 3D game is rendered, matrix mathematics is employed to translate coordinates in world space to screen space and therefore render a 3D world onto the screen. 4D objects and worlds are incomprehensible to beings who can only perceive the third dimension, meaning that there is always going to be a sense of esoterism when working with anything beyond three dimensions. Moreover, 4D geometry needs to be translated into 2D geometry in order to be rendered on screen, creating an additional barrier to visualisation.
 
-END
-
-- Describe chosen area with strong rationale for why its important to investigate
-- Describes the scope and purpose of deliverable and what I'm expecting to achieve
-- Describe the level of difficulty along with relevance of work to field of graphics / games
+Firstly, in order to see a 4D object, a 4D object needs to be created. The tesseract is a 4D hypercube and is suitable as the main polytope for this project. For this project, I want to perform projections and other transformations using GPU shaders like you would for an ordinary game. This is in contrast to the approach \citeauthor*{hollasch1991four} \parencite*{hollasch1991four} and many other article writers chose; they transform the vertices in C++ and then give those to the GPU instead. Secondly, in order to view the fourth dimension, a 4D camera can be used to view the fourth dimension from various positions and angles. Next, a projection matrix is used to project vertices into the third dimension, where it is then perceived by a separate, 3D camera and then finally projected to 2D for rendering on screen. Getting all of these steps correct is difficult as they cannot be worked on independently and tested easily --- it is the sum of these steps that achieve even the simplest result. 
 
 \section{Standout elements (10\%)}
 
@@ -92,7 +94,7 @@ END
 - Use appropriate and recognised notations and abstraction mechanisms
 - Clear and detailed evidence of the use of software engineering principles (software architecture)
 - Detail the graphical techniques or concepts employed and how they were implemented
-- Describe any algorithms that relate to delivarable
+- Describe any algorithms that relate to deliverable
 
 \section{Implementation (10\%)}
 
