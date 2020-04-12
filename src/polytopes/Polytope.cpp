@@ -150,11 +150,36 @@ App::Polytope::updateTransform() {
       break;
   }
 
+  // Validate shear coordinates
+  if (shearX < -1 || shearX > 4) { shearX = -1; }
+  if (shearY < -1 || shearY > 4) { shearY = -1; }
+
+  // Recreate shear matrix
+  for(unsigned int j = 0; j < 5; ++j) {
+    for(unsigned int i = 0; i < 5; ++i) {
+
+      // Identity along diagonal
+      if (i == j) {
+        shearMatrix[j][i] = 1.f;
+      }
+
+      // When shear x and y are different, insert shear value
+      else if (i == shearX && j == shearY) {
+        shearMatrix[j][i] = shearValue;
+      }
+      
+      // 0 otherwise
+      else {
+        shearMatrix[j][i] = 0.f;
+      }
+    }
+  }
 
   // Combine matrices to make transform
   mult(transform, translationMatrix, transform);
   mult(transform, rotationMatrix, transform);
   mult(transform, scaleMatrix, transform);
+  mult(transform, shearMatrix, transform);
 }
 
 // Reset all transformations for this polytope
@@ -167,6 +192,9 @@ App::Polytope::resetTransform() {
   firstRotation = 0.f;
   secondRotation = 0.f;
   enableDoubleRotation = false;
+  shearX = -1;
+  shearY = -1;
+  shearValue = 0;
 
   // Recreate the transform using these new values
   updateTransform();

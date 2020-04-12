@@ -350,8 +350,36 @@ App::Viewer::handleImgui() {
           if (i != 0) { ImGui::SameLine(); }
           char* entry = new char[5];
           std::sprintf(entry, "##%ux%u", i, j);
+
+          // Get read-only value to show in grid 
           float value = transform[i + j * 5];
+
+          // Highlight the selected vertex
+          const bool highlight = polytope->shearY == j && polytope->shearX == i;
+          if (highlight) {
+            const ImVec4 col = i == j ? ImVec4(1, 0, 0, 1) : ImVec4(1, 1, 1, 1);
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, col);
+            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, col);
+            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, col);
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0, 0, 0, 1));
+          }
+
+          // Show the value in the matrix
           ImGui::DragFloat(entry, &value, 0.1f);
+
+          // If the value is clicked, attempt to specify it for shearing
+          const ImGuiIO& io = ImGui::GetIO();
+          const bool clicked = io.MouseDown[0];
+          const bool hovered = ImGui::IsItemHovered();
+          if (hovered && clicked) {
+            polytope->shearX = i;
+            polytope->shearY = j;
+          }
+
+          // Pop colour style if it was highlighted
+          if (highlight) {
+            ImGui::PopStyleColor(4);
+          }
         }
       }
       ImGui::PopItemWidth();
@@ -360,7 +388,8 @@ App::Viewer::handleImgui() {
       // Allow the creation of different matrices
       if (ImGui::BeginTabBar("Transformations", ImGuiTabBarFlags_None)) {
 
-        if (ImGui::BeginTabItem("Position")) {
+        // Translation
+        if (ImGui::BeginTabItem("Translation")) {
           ImGui::PushItemWidth(60);
           ImGui::DragFloat("x", &polytope->position.x, 0.1f); ImGui::SameLine();
           ImGui::DragFloat("y", &polytope->position.y, 0.1f); ImGui::SameLine();
@@ -370,16 +399,21 @@ App::Viewer::handleImgui() {
           ImGui::EndTabItem();
         }
 
+        // Scaling
         if (ImGui::BeginTabItem("Scale")) {
           ImGui::PushItemWidth(60);
-          ImGui::DragFloat("x", &polytope->scaleTarget.x, 0.1f); ImGui::SameLine();
-          ImGui::DragFloat("y", &polytope->scaleTarget.y, 0.1f); ImGui::SameLine();
-          ImGui::DragFloat("z", &polytope->scaleTarget.z, 0.1f); ImGui::SameLine();
+          ImGui::DragFloat("x", &polytope->scaleTarget.x, 0.1f); 
+          ImGui::SameLine();
+          ImGui::DragFloat("y", &polytope->scaleTarget.y, 0.1f); 
+          ImGui::SameLine();
+          ImGui::DragFloat("z", &polytope->scaleTarget.z, 0.1f); 
+          ImGui::SameLine();
           ImGui::DragFloat("w", &polytope->scaleTarget.w, 0.1f);
           ImGui::PopItemWidth();
           ImGui::EndTabItem();
         }
 
+        // Rotations
         if (ImGui::BeginTabItem("Rotation")) {
           ImGui::PushItemWidth(60);
           ImGui::Combo("Rotation type", (int*)&polytope->rotationType,
@@ -407,6 +441,21 @@ App::Viewer::handleImgui() {
                 secondRotationOffset, secondRotationSpeed);
             ImGui::PopID();
           }
+          ImGui::PopItemWidth();
+          ImGui::EndTabItem();
+        }
+
+        // Shearing
+        if (ImGui::BeginTabItem("Shear")) {
+          ImGui::TextWrapped("To shear the object, please select an element "
+              "of the transformation matrix above to use as the coordinate "
+              "for shearing, then use the slider below to adjust the shear "
+              "matrix");
+          ImGui::PushItemWidth(60);
+          ImGui::DragInt("i##shear", &polytope->shearX, 0.1f, 0, 4); 
+          ImGui::SameLine();
+          ImGui::DragInt("j##shear", &polytope->shearY, 0.1f, 0, 4); 
+          ImGui::DragFloat("Shear value", &polytope->shearValue, 0.001f);
           ImGui::PopItemWidth();
           ImGui::EndTabItem();
         }

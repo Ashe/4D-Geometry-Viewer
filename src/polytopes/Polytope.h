@@ -30,6 +30,11 @@ namespace App {
       float firstRotation = 0.f;
       float secondRotation = 0.f;
 
+      // Shear values
+      int shearX = -1;
+      int shearY = -1;
+      float shearValue = 0;
+
       // ImGui hook for showing info about the current polytope
       virtual void showPolytopeInfo() = 0;
 
@@ -72,13 +77,13 @@ namespace App {
       float translationMatrix[5][5];
       float scaleMatrix[5][5];
       float rotationMatrix[5][5];
+      float shearMatrix[5][5];
 
       // Multiply two 5x5 matrices together
       static void mult(float out[5][5], float a[5][5], float b[5][5]);
 
       // Modify rotation matrix for specific planes
       void applyRotation(float angle, unsigned int axisA, unsigned int axisB);
-
   };
 }
 
