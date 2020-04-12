@@ -98,11 +98,7 @@ OpenGL interprets coordinates to be homogenous when rendering \parencite{woo1999
 
 Another feature I'm proud of is the summary window. For each polytope there is a set of information that describes the number of vertices, edges, faces and cells of not only the 4D shape but also each variant of the same polytope such as a line, a square and a cube --- while this information is trivial, being able to compare the geometry between each shape does help create an understanding of what a higher dimension means. Furthermore, clicking the name of each shape scales the rendered polytope such that a cube would get flattened into a square, for instance. I hope that small details like this inspire interest in the user to learn more about the relationships between dimensions.
 
-END
-
-- Describe standout elements (things considered important or critical, areas I'm proudest of, areas I struggled but then succeeded with)
-- Provide detail as to why they were important or how they relate to deliverable
-- Provide details, insight and rationale about the above
+Finally, I'm very proud of the fact that I created this application from scratch while maintaining cross-platform support. Until this project, I had never set up a 3D application from scratch and so learning and creating my own abstractions for use in the graphics pipeline was very fulfilling. The CMake build tool \parencite{cmake} allows a developer to generate an appropriate C or C++ project file such as \emph{.sln} for compilation on various platforms, while the use of GLFW \parencite{glfw}, OpenGL \parencite{opengl} and ImGui \parencite{imgui} meant that there were no dependencies on any given operating system and therefore any desktop should be able to compile it. This is a personal victory as it means that anyone interested in seeing and experimenting with 4D geometry can compile my program and take inspiration from the source code.
 
 \section{Design (30\%)}
 
