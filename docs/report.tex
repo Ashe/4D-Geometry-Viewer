@@ -84,6 +84,22 @@ Firstly, in order to see a 4D object, a 4D object needs to be created. The tesse
 
 \section{Standout elements (10\%)}
 
+My largest achievement with this project was that I actually managed to render a tesseract, a 4D hypercube. Given a set of 4D vertices and a list of indices, any poly in the 4th dimension and below can be rendered in this project. Changing the 3D and 4D cameras alter the perspective of the shape which is handled by the GPU as it would be in a normal video game. This was extremely difficult at first because of homogenous coordinates.
+
+OpenGL interprets coordinates to be homogenous when rendering \parencite{woo1999opengl} meaning that a vector $v = (5, 4, 3, 2)$ is divided by it's final component $w$ such that $v' = (\frac{5}{2}, \frac{4}{2}, \frac{3}{2}, \frac{2}{2})$. Figure \ref{fig:homogenous} illustrates how the 4th component of a 4D vector is used to scale vertices to give the deceiving appearance of a tesseract when it is actually just two inter-connected cubes with a difference in scaling. Overcoming this required a deep investigation of the 4D to 3D projection matrix and why it wasn't eliminating the 4th component of vertex coordinates.
+
+\begin{figure}[!h]
+  \centering
+  %\includegraphics[width=\textwidth]{img/24-02-20/centered_4D_cube.png}
+  \emph{TODO: Homogoenous image here}
+  \caption{Homogenous coordinates creating the appearance of a tesseract}
+  \label{fig:homogenous}
+\end{figure}
+
+Another feature I'm proud of is the summary window. For each polytope there is a set of information that describes the number of vertices, edges, faces and cells of not only the 4D shape but also each variant of the same polytope such as a line, a square and a cube --- while this information is trivial, being able to compare the geometry between each shape does help create an understanding of what a higher dimension means. Furthermore, clicking the name of each shape scales the rendered polytope such that a cube would get flattened into a square, for instance. I hope that small details like this inspire interest in the user to learn more about the relationships between dimensions.
+
+END
+
 - Describe standout elements (things considered important or critical, areas I'm proudest of, areas I struggled but then succeeded with)
 - Provide detail as to why they were important or how they relate to deliverable
 - Provide details, insight and rationale about the above
