@@ -396,6 +396,9 @@ App::Viewer::handleImgui() {
           ImGui::DragFloat("z", &polytope->position.z, 0.1f); ImGui::SameLine();
           ImGui::DragFloat("w", &polytope->position.w, 0.1f);
           ImGui::PopItemWidth();
+          if (ImGui::Button("Reset translation")) {
+            polytope->position = glm::vec4(0.f, 0.f, 0.f, 0.f);
+          }
           ImGui::EndTabItem();
         }
 
@@ -410,6 +413,9 @@ App::Viewer::handleImgui() {
           ImGui::SameLine();
           ImGui::DragFloat("w", &polytope->scaleTarget.w, 0.1f);
           ImGui::PopItemWidth();
+          if (ImGui::Button("Reset scaling")) {
+            polytope->scaleTarget = glm::vec4(1.f, 1.f, 1.f, 1.f);
+          }
           ImGui::EndTabItem();
         }
 
@@ -442,6 +448,19 @@ App::Viewer::handleImgui() {
             ImGui::PopID();
           }
           ImGui::PopItemWidth();
+          if (ImGui::Button("Reset rotation")) {
+            polytope->firstRotation = 0.f;
+            polytope->secondRotation = 0.f;
+            polytope->enableDoubleRotation = false;
+            spinFirstRotation = false;
+            spinSecondRotation = false;
+            firstRotationAngle = 0.f;
+            firstRotationSpeed = 1.f;
+            firstRotationOffset = 0.f;
+            secondRotationAngle = 0.f;
+            secondRotationSpeed = 1.f;
+            secondRotationOffset = 0.f;
+          }
           ImGui::EndTabItem();
         }
 
@@ -457,6 +476,11 @@ App::Viewer::handleImgui() {
           ImGui::DragInt("j##shear", &polytope->shearY, 0.1f, 0, 4); 
           ImGui::DragFloat("Shear value", &polytope->shearValue, 0.001f);
           ImGui::PopItemWidth();
+          if (ImGui::Button("Reset shear")) {
+            polytope->shearX = -1;
+            polytope->shearY = -1;
+            polytope->shearValue = 0.f;
+          }
           ImGui::EndTabItem();
         }
 
@@ -466,7 +490,7 @@ App::Viewer::handleImgui() {
       // Reset the matrix 
       ImGui::Separator();
       ImGui::Spacing();
-      if (ImGui::Button("Reset transform")) {
+      if (ImGui::Button("Reset all transformations")) {
         polytope->resetTransform();
       }
       ImGui::End();
