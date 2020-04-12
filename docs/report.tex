@@ -80,9 +80,10 @@ Instead of just displaying a 4D object, I wanted to allow the user to be in cont
 
 Visualising the fourth dimension in simulations and games isn't simple. 2D games can be seen as simplified 3D worlds, especially when art and rendering techniques are used to try and mimic the 3D world as seen in classic arcade games like After Burner \parencite{afterburner}. Humans are three-dimensional beings and as such we feel familiar with worlds that appear to be 3D even when looking at them through a two-dimensional display. When a 3D game is rendered, matrix mathematics is employed to translate coordinates in world space to screen space and therefore render a 3D world onto the screen. 4D objects and worlds are incomprehensible to beings who can only perceive the third dimension, meaning that there is always going to be a sense of esoterism when working with anything beyond three dimensions. Moreover, 4D geometry needs to be translated into 2D geometry in order to be rendered on screen, creating an additional barrier to visualisation.
 
-Firstly, in order to see a 4D object, a 4D object needs to be created. The tesseract is a 4D hypercube and is suitable as the main polytope for this project. For this project, I want to perform projections and other transformations using GPU shaders like you would for an ordinary game. This is in contrast to the approach \citeauthor*{hollasch1991four} \parencite*{hollasch1991four} and many other article writers chose; they transform the vertices in C++ and then give those to the GPU instead. Secondly, in order to view the fourth dimension, a 4D camera can be used to view the fourth dimension from various positions and angles. Next, a projection matrix is used to project vertices into the third dimension, where it is then perceived by a separate, 3D camera and then finally projected to 2D for rendering on screen. Getting all of these steps correct is difficult as they cannot be worked on independently and tested easily --- it is the sum of these steps that achieve even the simplest result. 
+Firstly, in order to see a 4D object, a 4D object needs to be created. The tesseract is a 4D hypercube and is suitable as the main polytope for this project. For this project, I want to perform projections and other transformations using GPU shaders like you would for an ordinary game. This is in contrast to the approach \citeauthor*{hollasch1991four} \parencite*{hollasch1991four} and many other article writers chose; they transform the vertices in \texttt{C++} and then give those to the GPU instead. Secondly, in order to view the fourth dimension, a 4D camera can be used to view the fourth dimension from various positions and angles. Next, a projection matrix is used to project vertices into the third dimension, where it is then perceived by a separate, 3D camera and then finally projected to 2D for rendering on screen. Getting all of these steps correct is difficult as they cannot be worked on independently and tested easily --- it is the sum of these steps that achieve even the simplest result. 
 
 \section{Standout elements (10\%)}
+\label{sec:standoutElements}
 
 My largest achievement with this project was that I actually managed to render a tesseract, a 4D hypercube. Given a set of 4D vertices and a list of indices, any poly in the 4th dimension and below can be rendered in this project. Changing the 3D and 4D cameras alter the perspective of the shape which is handled by the GPU as it would be in a normal video game. This was extremely difficult at first because of homogenous coordinates.
 
@@ -98,9 +99,73 @@ OpenGL interprets coordinates to be homogenous when rendering \parencite{woo1999
 
 Another feature I'm proud of is the summary window. For each polytope there is a set of information that describes the number of vertices, edges, faces and cells of not only the 4D shape but also each variant of the same polytope such as a line, a square and a cube --- while this information is trivial, being able to compare the geometry between each shape does help create an understanding of what a higher dimension means. Furthermore, clicking the name of each shape scales the rendered polytope such that a cube would get flattened into a square, for instance. I hope that small details like this inspire interest in the user to learn more about the relationships between dimensions.
 
-Finally, I'm very proud of the fact that I created this application from scratch while maintaining cross-platform support. Until this project, I had never set up a 3D application from scratch and so learning and creating my own abstractions for use in the graphics pipeline was very fulfilling. The CMake build tool \parencite{cmake} allows a developer to generate an appropriate C or C++ project file such as \emph{.sln} for compilation on various platforms, while the use of GLFW \parencite{glfw}, OpenGL \parencite{opengl} and ImGui \parencite{imgui} meant that there were no dependencies on any given operating system and therefore any desktop should be able to compile it. This is a personal victory as it means that anyone interested in seeing and experimenting with 4D geometry can compile my program and take inspiration from the source code.
+Finally, I'm very proud of the fact that I created this application from scratch while maintaining cross-platform support. Until this project, I had never set up a 3D application from scratch and so learning and creating my own abstractions for use in the graphics pipeline was very fulfilling. The CMake build tool \parencite{cmake} allows a developer to generate an appropriate \texttt{C} or \texttt{C++} project file such as \texttt{.sln} for compilation on various platforms, while the use of GLFW \parencite{glfw}, OpenGL \parencite{opengl} and ImGui \parencite{imgui} meant that there were no dependencies on any given operating system and therefore any desktop should be able to compile it. This is a personal victory as it means that anyone interested in seeing and experimenting with 4D geometry can compile my program and take inspiration from the source code.
 
 \section{Design (30\%)}
+
+The bulk of the project is split between three core areas:
+
+\begin{itemize}
+  \item \textbf{The viewer:} The main scene containing interactive interfaces, polytopes, cameras and all the logic necessary for communication between them.
+  \item \textbf{The polytopes:} The generation and usage of various polytopes such as simplices and hypercubes as well as the common interface used to polymorphically interact with them.
+  \item \textbf{The pipeline:} How a set of coordinates are given to the GPU and when and how they are transformed by GLSL shader code for on-screen rendering.
+\end{itemize}
+
+\subsection{The viewer}
+
+When the application is first opened, the viewer is the first thing the viewer is presented with. Along the top there is a menu bar with two sub-menus: the first allows you to change which polytope is being rendered and the second allows you to close and re-open various windows.
+
+There are two camera windows, one that is for the 3D camera and another for the 4D camera. Both cameras are required for viewing the fourth dimension but the 3D camera is the one that the user will be most familiar with. The 3D camera can be controlled using the keys shown in table \ref{table:cameraControls}. The 4D camera cannot be piloted in the same way as it simply wouldn't make sense.
+
+\begin{table}[!h]
+  \centering
+  \begin{tabular}{ | l | p{9.5cm} |}
+    \hline
+    \textbf{Keyboard shortcut} & \textbf{Description} \\ \hline
+    \texttt{W, A, S, D} & Move forwards, left, backwards and right respectively \\ \hline
+    \texttt{Space, C} & Move upwards and downwards in relation to the camera \\ \hline
+    \texttt{Right mouse button} & Look around the scene while held \\ \hline
+  \end{tabular}
+  \caption{3D camera controls}
+  \label{table:cameraControls}
+\end{table}
+
+While moving the 3D camera acts as you'd expect, moving and turning the 4D camera can appear to twist and deform the object without necessarily moving it. While this project doesn't include any theories about the meaning of the fourth dimension, one way to think about it is looking at the same object but from a different point in time --- it would not move, but simply changing the time of observation can impact an object one is looking at.
+
+As mentioned in section \ref{sec:standoutElements}, another part of the viewer is the information window which shows a table of different shapes belonging to the selected polytope. Clicking on the name of a shape scales the rendered object so that it resembles the same shape --- multiplying the $y$ and $z$ components of cube vertices would give you a line segment for instance, as only $x$ would be able to vary. These transformations are applied smoothly for the users pleasure. Figure \ref{fig:informationWindow} shows this window displaying the information for hypercubes up to the 4th dimension.
+
+\begin{figure}[!h]
+  \centering
+  %\includegraphics[width=12cm]{img/polytope_information.png}
+  \emph{TODO: Information window here}
+  \caption{Polytope information window detailing different hypercubes}
+  \label{fig:informationWindow}
+\end{figure}
+
+The final window is the transformation window. In this window, the user can specify different types of transformations to be applied to the object --- the product of all these transformations can be seen in the matrix at the top of the window. This is the exact matrix that is sent to the GPU along with the view and projection matrices from the cameras. There are multiple tabs in the transformation window to modify each transformation separately. While they are mainly self-explanatory and just involve dragging values to increase or decrease them, there are some notable features of some transformations.
+
+When configuring the rotation matrix, the user can specify whether they want to manually set the angle or whether they want the object to automatically spin. The user then chooses a plane to rotate --- in 3D, if you want to rotate around the $y$ axis, then the $xz$ plane is what needs to change. In 4D, rather than rotate around an axis, a plane is used instead and so the user can specify which pair of axis they wish to manipulate. Finally, in 4D it is possible to perform 2 rotations with the same time with separate planes (such as $xz$ and $yw$), therefore in this project the user can perform the infamous '4D double rotation', along with applying independent, automatic spins on each rotation.
+
+When translating the matrix in 4D, the object doesn't move as expected. While translating in 3D simply moves the object to a different location, moving in 4D distorts the object in a way that seems incorrect. However, by moving the 4D camera in conjunction to a 4D translation, one can verify that the translation is indeed correct and that it is our expectations of the perceived translation that are incorrect.
+
+\begin{figure}[!h]
+  \centering
+  %\includegraphics[width=11cm]{img/transformation_window.png}
+  \emph{TODO: Transformation window here (with new transformations)}
+  \caption{The transformation window on the rotation section}
+  \label{fig:informationWindow}
+\end{figure}
+
+\subsection{The polytopes}
+
+There are three polytopes for this project: The \emph{simplex}, the \emph{hypercube} and the \emph{hyperoctahedron}. The next polytope I would include would be the \emph{120 cell}, but with 600 vertices and 1200 edges, constructing a hyperdodecahedron would be very time consuming and its visualisation may be confusing with so many lines drawn --- while rendering solid shapes instead of wireframes would make this more attractive to implement, this would be at the cost of detail. Each polytope only handles it's construction and storage of its information as the rest is handled by a common base class defined in the file \texttt{Polytope.h}.
+
+This common class stores \texttt{vectors} of the objects position and scale as well as some \texttt{floats} representing rotation information. Every frame, matrices representing these transformations are recalculated and then combined to form the final transformation matrix that can be seen in the transformation window discussed in section \ref{sec:standoutElements}. The values that are tweaked with that interface are these variables inside \texttt{Polytope}, meaning that each shape's transformations are stored separately from one another.
+
+When a polytope derived from the base class is constructed using its specialised constructor, it is pointing \texttt{vertices} and \texttt{indices} to the addresses of arrays containing \texttt{floats} and \texttt{unsigned integers} respectively. When these arrays are set up, \texttt{updateVertices} is called to inform inform \texttt{Polytope} how many values have been stored in each one and how they should be rendered. This means that the \texttt{Polytope} base class doesn't ever know what it's rendering, but rather \emph{how} to render the stored data.
+
+\subsection{The pipeline}
+
 
 - Describe how the deliverable works in detail
 - Use appropriate and recognised notations and abstraction mechanisms

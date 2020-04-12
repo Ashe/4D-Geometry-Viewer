@@ -15,7 +15,6 @@ App::Hyperoctahedron::Hyperoctahedron() {
     for (int val = -1; val < 2; val += 2) {
       for (unsigned int i = 0; i < 4; ++i) {
         vertices[vertexCount++] = i == j ? (float)val : 0.f;
-        printf("%f\n", vertices[vertexCount - 1]);
       }
     }
   }
