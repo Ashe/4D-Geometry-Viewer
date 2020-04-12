@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "Camera4D.h"
 
+#include "Shader.h"
 #include "shaders/Vertex.h"
 #include "shaders/Fragment.h"
 
@@ -49,12 +50,8 @@ namespace App {
 
     private:
 
-      // ID of each shader
-      unsigned int vertexShader;
-      unsigned int fragmentShader;
-
-      // ID of shader program
-      unsigned int shaderProgram;
+      // Shader to use
+      Shader shader;
 
       // Current object to render
       Polytope* polytope;

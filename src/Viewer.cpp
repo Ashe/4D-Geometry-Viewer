@@ -6,56 +6,8 @@
 // Constructor
 App::Viewer::Viewer(Engine& e) : Scene(e) {
 
-  /////////////
-  // SHADERS //
-  /////////////
-
-  // Create and compile vertex shader
-  vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertexShader, 1, &App::Shaders::vertexSource, NULL);
-  glCompileShader(vertexShader);
-
-  // Check for any errors
-  int success;
-  char infoLog[512];
-  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-  if(!success) {
-    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-    printf("[Error] Failed to compile vertex shader.\n - %s\n", infoLog);
-  }
-
-  // Create and compile fragment shader
-  fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragmentShader, 1, &App::Shaders::fragmentSource, NULL);
-  glCompileShader(fragmentShader);
-
-  // Check for any errors
-  glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-  if(!success) {
-    glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-    printf("[Error] Failed to compile fragment shader.\n - %s\n", infoLog);
-  }
-
-  // Create a shader program from the vertex and fragment shaders
-  shaderProgram = glCreateProgram();
-  glAttachShader(shaderProgram, vertexShader);
-  glAttachShader(shaderProgram, fragmentShader);
-  glLinkProgram(shaderProgram);
-
-  // Check for any errors in the shaders
-  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-  if(!success) {
-      glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-      printf("[Error] Failed to link shader program.\n - %s\n", infoLog);
-  }
-
-  // Delete shader polytopes now they aren't in use
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
-
-  ////////////
-  // Viewer //
-  ////////////
+  // Create the shader
+  Shader::compile(shader, Shaders::vertexSource, Shaders::fragmentSource);
 
   // Intialise the cameras
   camera = Camera(glm::vec3(0.f, 0.f, 5.f));
@@ -233,29 +185,25 @@ App::Viewer::render() {
       engine.getAspectRatio(), 0.1f, viewDistance);
 
   // Give 3D view matrix to vertex shader
-  const int view3DLoc = glGetUniformLocation(shaderProgram, "view3D");
-  glUniformMatrix4fv(view3DLoc, 1, GL_FALSE, glm::value_ptr(view3D));
+  shader.setMat4("view3D", view3D);
 
   // Give 4D view matrix to vertex shader
-  const int view4DLoc = glGetUniformLocation(shaderProgram, "view4D");
-  glUniform1fv(view4DLoc, sizeof(float) * 25, view4D);
+  shader.setFloats("view4D", 25, view4D);
 
   // Give 3D projection matrix to vertex shader
-  const int proj3DLoc = glGetUniformLocation(shaderProgram, "projTo2D");
-  glUniformMatrix4fv(proj3DLoc, 1, GL_FALSE, glm::value_ptr(projTo2D));
+  shader.setMat4("projTo2D", projTo2D);
 
   // Show wireframes when enabled
   glPolygonMode(GL_FRONT_AND_BACK, showWireframe ? GL_LINE : GL_FILL);
 
   // Choose a shader
-  glUseProgram(shaderProgram);
+  glUseProgram(shader.id());
 
   // Render the tesseract
   if (polytope != nullptr) {
 
     // Give OpenGL transform of polytope
-    const int trans = glGetUniformLocation(shaderProgram, "transform");
-    glUniform1fv(trans, sizeof(float) * 25, polytope->getTransform());
+    shader.setFloats("transform", 25, polytope->getTransform());
 
     // Render polytope
     polytope->render();
