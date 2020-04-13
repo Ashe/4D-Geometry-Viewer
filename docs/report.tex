@@ -8,6 +8,8 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{array}
+\usepackage{mathtools}
+\usepackage{braket}
 \usepackage[toc, title, page]{appendix}
 \usepackage{pdfpages}
 \usepackage[style=apa, backend=biber, language=english]{biblatex}
@@ -77,6 +79,7 @@ Video games are just as much about the feel of the world as they are about the l
 Instead of just displaying a 4D object, I wanted to allow the user to be in control of how the object is looked at and how it is transformed. These interactions are made with both keyboard shortcuts and an interactive menu. Users can move and rotate the camera to examine the 4D object, while a menu can be used to apply various translations, rotations and scales to the object. The combination of each of these transformations can be seen in a 5x5 matrix and their effects are applied to the 4D object and therefore forming the connection between how an object is transformed and how it appears --- something which may be confusing in the context of the fourth dimension.
 
 \subsection{4D to 2D: The challenges of visualising 4D}
+\label{subsec:challenges}
 
 Visualising the fourth dimension in simulations and games isn't simple. 2D games can be seen as simplified 3D worlds, especially when art and rendering techniques are used to try and mimic the 3D world as seen in classic arcade games like After Burner \parencite{afterburner}. Humans are three-dimensional beings and as such we feel familiar with worlds that appear to be 3D even when looking at them through a two-dimensional display. When a 3D game is rendered, matrix mathematics is employed to translate coordinates in world space to screen space and therefore render a 3D world onto the screen. 4D objects and worlds are incomprehensible to beings who can only perceive the third dimension, meaning that there is always going to be a sense of esoterism when working with anything beyond three dimensions. Moreover, 4D geometry needs to be translated into 2D geometry in order to be rendered on screen, creating an additional barrier to visualisation.
 
@@ -99,7 +102,7 @@ OpenGL interprets coordinates to be homogenous when rendering \parencite{woo1999
 
 Another feature I'm proud of is the summary window. For each polytope there is a set of information that describes the number of vertices, edges, faces and cells of not only the 4D shape but also each variant of the same polytope such as a line, a square and a cube --- while this information is trivial, being able to compare the geometry between each shape does help create an understanding of what a higher dimension means. Furthermore, clicking the name of each shape scales the rendered polytope such that a cube would get flattened into a square, for instance. I hope that small details like this inspire interest in the user to learn more about the relationships between dimensions.
 
-Finally, I'm very proud of the fact that I created this application from scratch while maintaining cross-platform support. Until this project, I had never set up a 3D application from scratch and so learning and creating my own abstractions for use in the graphics pipeline was very fulfilling. The CMake build tool \parencite{cmake} allows a developer to generate an appropriate \texttt{C} or \texttt{C++} project file such as \texttt{.sln} for compilation on various platforms, while the use of GLFW \parencite{glfw}, OpenGL \parencite{opengl} and ImGui \parencite{imgui} meant that there were no dependencies on any given operating system and therefore any desktop should be able to compile it. This is a personal victory as it means that anyone interested in seeing and experimenting with 4D geometry can compile my program and take inspiration from the source code.
+Finally, I'm very proud of the fact that I created this application from scratch while maintaining cross-platform support. Until this project, I had never set up a 3D application from scratch and so learning and creating my own abstractions for use in the graphics pipeline was very fulfilling. The CMake build tool \parencite{cmake} allows a developer to generate an appropriate \texttt{C} or \texttt{C++} project file such as \texttt{.sln} for compilation on various platforms, while the use of GLFW \parencite{glfw}, OpenGL \parencite{opengl}, GLM \parencite{glm} and ImGui \parencite{imgui} meant that there were no dependencies on any given operating system and therefore any desktop should be able to compile it. This is a personal victory as it means that anyone interested in seeing and experimenting with 4D geometry can compile my program and take inspiration from the source code.
 
 \section{Design (30\%)}
 
@@ -113,7 +116,11 @@ The bulk of the project is split between three core areas:
 
 \subsection{The viewer}
 
-When the application is first opened, the viewer is the first thing the viewer is presented with. Along the top there is a menu bar with two sub-menus: the first allows you to change which polytope is being rendered and the second allows you to close and re-open various windows.
+\subsubsection{Menubar}
+
+When the application is first opened, the \texttt{Viewer} is the first thing the user is presented with. The \texttt{Viewer} class is defined in \texttt{Viewer.h} and acts a scene capable of handling input and being updated and rendering every frame. At the top of the screen there is a menu bar with two sub-menus: the first allows you to change which polytope is being rendered and the second allows you to close and re-open various windows. I tried to avoid hiding functionality from the user for such a simple project, so this this is sufficient for a menu bar.
+
+\subsubsection{Camera windows}
 
 There are two camera windows, one that is for the 3D camera and another for the 4D camera. Both cameras are required for viewing the fourth dimension but the 3D camera is the one that the user will be most familiar with. The 3D camera can be controlled using the keys shown in table \ref{table:cameraControls}. The 4D camera cannot be piloted in the same way as it simply wouldn't make sense.
 
@@ -132,6 +139,8 @@ There are two camera windows, one that is for the 3D camera and another for the 
 
 While moving the 3D camera acts as you'd expect, moving and turning the 4D camera can appear to twist and deform the object without necessarily moving it. While this project doesn't include any theories about the meaning of the fourth dimension, one way to think about it is looking at the same object but from a different point in time --- it would not move, but simply changing the time of observation can impact an object one is looking at.
 
+\subsubsection{Polytope information window}
+
 As mentioned in section \ref{sec:standoutElements}, another part of the viewer is the information window which shows a table of different shapes belonging to the selected polytope. Clicking on the name of a shape scales the rendered object so that it resembles the same shape --- multiplying the $y$ and $z$ components of cube vertices would give you a line segment for instance, as only $x$ would be able to vary. These transformations are applied smoothly for the users pleasure. Figure \ref{fig:informationWindow} shows this window displaying the information for hypercubes up to the 4th dimension.
 
 \begin{figure}[!h]
@@ -141,6 +150,9 @@ As mentioned in section \ref{sec:standoutElements}, another part of the viewer i
   \caption{Polytope information window detailing different hypercubes}
   \label{fig:informationWindow}
 \end{figure}
+
+\subsubsection{Transformation window}
+\label{subsubsec:transformationWindow}
 
 The final window is the transformation window. In this window, the user can specify different types of transformations to be applied to the object --- the product of all these transformations can be seen in the matrix at the top of the window. This is the exact matrix that is sent to the GPU along with the view and projection matrices from the cameras. There are multiple tabs in the transformation window to modify each transformation separately. While they are mainly self-explanatory and just involve dragging values to increase or decrease them, there are some notable features of some transformations.
 
@@ -165,13 +177,83 @@ This common class stores \texttt{vectors} of the objects position and scale as w
 When a polytope derived from the base class is constructed using its specialised constructor, it is pointing \texttt{vertices} and \texttt{indices} to the addresses of arrays containing \texttt{floats} and \texttt{unsigned integers} respectively. When these arrays are set up, \texttt{updateVertices} is called to inform inform \texttt{Polytope} how many values have been stored in each one and how they should be rendered. This means that the \texttt{Polytope} base class doesn't ever know what it's rendering, but rather \emph{how} to render the stored data.
 
 \subsection{The pipeline}
+\subsubsection{View matrices}
+\label{subsubsec:viewMatrices}
 
+Each frame, the \texttt{viewer} handles the users input and then calls \texttt{updateTransform} on the polytope, requesting that its transformation matrix should be recalculated in preparation for rendering. When it's time to render the object, view matrices are retrieved from both the 3D and 4D cameras; the 3D camera simply uses \texttt{glm::lookAt} to create its view matrix, however the 4D camera's view matrix had to be calculate by hand as is the case with a lot of the other 4D functionality. Consider a simple translation in 3D space:
 
-- Describe how the deliverable works in detail
-- Use appropriate and recognised notations and abstraction mechanisms
-- Clear and detailed evidence of the use of software engineering principles (software architecture)
-- Detail the graphical techniques or concepts employed and how they were implemented
-- Describe any algorithms that relate to deliverable
+\begin{equation*}
+  \begin{pmatrix}
+  1 & 0 & 0 & i \\
+  0 & 1 & 0 & j \\
+  0 & 0 & 1 & k \\
+  0 & 0 & 0 & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    x \\
+    y \\
+    z \\
+    1
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    x + i \\
+    y + j \\
+    z + k \\
+    1
+  \end{pmatrix}
+\end{equation*}
+
+Even though this is a 3D transformation, the use of the fourth dimension and homogenous coordinates is required to translate a set of coordinates. This meant that every 4D operation including the transformations in section \ref{subsubsec:transformationWindow} were implemented with 5D (as in 5x5) matrices. Since this use-case is so uncommon, most graphics libraries including GLM do not provide 5D vectors, matrices or the operations to build and manipulate them. It is because of this that I could not rely on GLM and had to write my own matrix implementations of the construction and multiplication of these 5D matrices. The 5x5 4D view matrix $\textbf{M}$ can be found by crossing the vectors $up$, $forward$ (found by $target - position$) and $over$; $over$ is required for the same reason that $up$ is necessary in 3D view matrices and each dimensional axis requires a new 'up' \parencite[\texttt{CameraND.h}]{truengine}.
+
+\begin{equation*}
+  \textbf{M} =
+  \left\{\quad
+  \begin{pmatrix}
+  1 & 0 & 0 & 0 & q_x \\
+  0 & 1 & 0 & 0 & r_x \\
+  0 & 0 & 1 & 0 & s_x \\
+  0 & 0 & 0 & 1 & t_x \\
+  0 & 0 & 0 & 0 & 1
+  \end{pmatrix}
+  \quad \Biggm{|} \quad
+  \begin{aligned}
+    & q = \;|\; cross3(up, over, t) \;| \\
+    & r = \;|\; cross3(over, t, q) \;| \\
+    & s = \;|\; cross3(t, q, r) \;| \\
+    & t = \;|\; target - position \;|
+  \end{aligned}
+  \quad\right\}
+\end{equation*}
+
+It is important to note that the use of 4D vectors enables the usage of the triple-cross-product. In 3D, two 3D vectors are placed and cross-multiplied in a 3x3 matrix where the final column or row is taken as the output, meaning that in a 4x4 matrix, 3 4D vectors can be multiplied together in the same way:
+
+\begin{equation*}
+  cross3(a, b, c) =
+  \begin{pmatrix}
+  a_x & b_x & c_x & \textbf{i} \\
+  a_y & b_y & c_y & \textbf{j} \\
+  a_z & b_z & c_z & \textbf{k} \\
+  a_w & b_w & c_w & \textbf{l}
+  \end{pmatrix}
+\end{equation*}
+
+\subsubsection{Projection matrices}
+
+With the model matrix being created via user-defined transformations and the view matrices being calculated by the cameras, the only matrices remaining are the ones that handle projecting from a higher dimension to a lower dimension. While the 3D to 2D projection was achieved trivially with the help of GLM's \texttt{glm::perspective} function, projecting 4D to 3D is a more complex process. 
+
+There isn't necessarily a correct solution for 4D to 3D projection as we cannot comprehend what the 4th dimension should look like; it's easy to determine whether the perspective used in art is unrealistic because we can compare it to real life, but we cannot compare what we see in 3D to what we expect to see in 4D. \citeauthor{schloss2016understanding} created an insightful video showing how a tesseract can be projected to 3D by projecting its shadow into the third dimension, a technique known as a stereographic projection \parencite*[2:42]{schloss2016understanding}. \citeauthor{schloss2016understanding} proposed the following projection matrix $\textbf{P}$ where $l_w$ is the location of the light source along the 4D axis and $w$ is the point to be projected:
+
+\begin{equation*}
+  \textbf{P} =
+  \begin{pmatrix}
+    \frac{1}{l_w - w_x} & 0 & 0 & 0 \\
+    0 & \frac{1}{l_w - w_y} & 0 & 0 \\
+    0 & 0 & \frac{1}{l_w - w_z} & 0
+  \end{pmatrix}
+\end{equation*}
+
+Since $w$ is the vertex of the 4D object to be projected, this matrix needs to be calculated for every vertex in the shape, therefore this calculation needs to happen after the vertices have been transformed by both transformation and view matrices. As discussed in section \ref{subsec:challenges}, this project is going to use shaders to take advantage of the GPU, meaning that the construction of the projection matrix $\textbf{P}$ along with the ability to multiply 5x5 matrices and 4D vectors needed be implemented with GLSL inside the vertex shader --- this can be seen in appendix \ref{app:vertexShader}. Everything is now taken into consideration and rendering a 4D object is the same as it would be for any 3D object: binding buffers, sending vertex and index data to the GPU, passing uniforms to the shaders and finally drawing the elements based on the information stored in the \texttt{Polytope} class.
 
 \section{Implementation (10\%)}
 
@@ -188,9 +270,56 @@ When a polytope derived from the base class is constructed using its specialised
 \cleardoublepage
 \begin{appendices}
 
-\section{Something}
+\section{Vertex shader source code (GLSL)}
+\label{app:vertexShader}
 
-It's an appendix
+\begin{lstlisting}[language=c++]
+  #version 330 core
+  layout (location = 0) in vec4 aPos;
+  uniform float transform[25];
+  uniform float view4D[25];
+  uniform float distance;
+  uniform mat4 view3D;
+  uniform mat4 projTo2D;
+  
+  // Used to multiply a 5x5 matrix by a 5D vector
+  void mult(out float ret[5], in float a[25], in float b[5]) {
+    float result[5] = float[5](0, 0, 0, 0, 0);
+    for (int j = 0; j < 5; j++) {
+      for (int i = 0; i < 5; i++) {
+          result[j] += a[j + (i * 5)] * b[i];
+      }
+    }
+    ret = float[5](0, 0, 0, 0, 0);
+    for (int i = 0; i < 5; i++) {
+        ret[i] = result[i];
+    }
+  }
+  
+  // Entry point
+  void main() {
+
+    // Generate 5D homogenous coordinate
+    float pos[5] = float[5](aPos.x, aPos.y, aPos.z, aPos.w, 1);
+
+    // Transform vertex
+    mult(pos, transform, pos);
+
+    // View vertex from the 4D camera
+    mult(pos, view4D, pos);
+
+    // Project from 4D to 3D
+    vec4 p = vec4(pos[0], pos[1], pos[2], pos[3]) / pos[4];
+    mat3x4 to3D = mat3x4(
+        vec4(1 / (distance - p.w), 0.f, 0.f, 0.f),
+        vec4(0.f, 1 / (distance - p.w), 0.f, 0.f),
+        vec4(0.f, 0.f, 1 / (distance - p.w), 0.f));
+    vec3 p3D = p * to3D;
+
+    // View with the 3D camera and project to 2D
+    gl_Position = (projTo2D * view3D * vec4(p3D, 1));
+  }
+\end{lstlisting}
 
 \end{appendices}
 
