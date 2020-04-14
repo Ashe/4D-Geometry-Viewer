@@ -284,12 +284,6 @@ After the 3D camera was fixed and could be piloted as expected, it was time to g
 
 Since this was my first glimpse into the effects of rendering non-homogenous 4D coordinates I found this result exciting despite it being a bug. At first I suspected the bug to be related to the interaction between the near and far planes of the 4D camera and the fourth dimension, but it was actually my projection. Projection matrices eliminate a component of a vector by being sized differently; multiplying a 4x3 matrix with vector of length 4 would produce coordinates containing 3 elements instead. I initially had my projection set up as a 4x4 matrix and accepted the output to be a 3D coordinate written in a homogenous way and so I scaled the entire vector by its $w$ component. After altering my projection matrix produce \texttt{vec3}s, the tesseract was rendered although it was skewed due to no longer being centered around $(0, 0, 0, 0)$. This was fixed by reverting the $w$ component in the tesseract's vertices such that $w \in \{-1, 1\}$.
 
-\begin{figure}[!h]
-  \centering
-  \includegraphics[width=\textwidth]{img/finished_project.png}
-  \caption{A final screenshot of the project}
-  \label{fig:finishedProject}
-\end{figure}
 
 \pagebreak
 
@@ -309,6 +303,36 @@ With that, I had achieved all the objectives I set out to meet for this project 
 \section{Polytopes}
 \label{app:polytopes}
 
+\subsection*{Hypercube}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=\textwidth]{img/hypercube.png}
+\end{figure}
+
+\lstinputlisting[language=c++, firstline=6, lastline=86]{../src/polytopes/Hypercube.cpp}
+
+\pagebreak
+\subsection*{Simplex}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=15cm]{img/simplex.png}
+\end{figure}
+
+\lstinputlisting[language=c++, firstline=6, lastline=73]{../src/polytopes/Simplex.cpp}
+
+\pagebreak
+\subsection*{Hyperoctahedron}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=\textwidth]{img/hyperoctahedron.png}
+\end{figure}
+
+\lstinputlisting[language=c++, firstline=6, lastline=36]{../src/polytopes/Hyperoctahedron.cpp}
+
+\pagebreak
 \section{Vertex shader source code (GLSL)}
 \label{app:vertexShader}
 
