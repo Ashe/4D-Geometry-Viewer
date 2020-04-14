@@ -64,17 +64,16 @@ For this assignment, I have chosen to learn about and investigate the fourth dim
 
 \subsection{2D to 3D: Why do dimensions matter?}
 
-A game's graphics, character controls, world concepts and designs and even a game's genre are affected by the number of dimensions a game has -- this can be seen in \citeauthor*{riskofrain}' Risk of Rain \parencite*{riskofrain} and its sequel Risk of Rain 2 \parencite{riskofrain2}. In two-dimensional games, characters are generally confined to two axes and are therefore considered to be top-down or side-on; Risk of Rain is a platformer and makes use of a side-on perspective. Because of this, enemies line up and then stack on top of each other to attack the player, who's only choices of evasion are to run away or jump over the enemies. Risk of Rain 2 however is 3D, meaning that the enemies attempt to surround the player and the player can escape in multiple directions while also retaining their option to try and jump over enemies.
+A game's graphics, character controls, world concepts and designs and even a game's genre are affected by the number of dimensions a game has -- this can be seen in \citeauthor*{riskofrain}' Risk of Rain \parencite*{riskofrain} and its sequel Risk of Rain 2 \parencite{riskofrain2} shown in figure \ref{fig:riskofrain2}. In two-dimensional games, characters are generally confined to two axes and are therefore considered to be top-down or side-on; Risk of Rain is a platformer and makes use of a side-on perspective. Because of this, enemies line up and then stack on top of each other to attack the player, who's only choices of evasion are to run away or jump over the enemies. Risk of Rain 2 however is 3D, meaning that the enemies attempt to surround the player and the player can escape in multiple directions while also retaining their option to try and jump over enemies.
 
 \begin{figure}[!h]
   \centering
-  %\includegraphics[width=\textwidth]{img/24-02-20/centered_4D_cube.png}
-  \emph{TODO: RISK OF RAIN IMAGE HERE}
-  \caption{A 3D sequel to the 2D game \emph{Risk of Rain}}
-  \label{fig:homogenous}
+  \includegraphics[width=\textwidth]{img/risk_of_rain_2.jpg}
+  \caption{A 3D sequel to the 2D game \emph{Risk of Rain} \parencite{riskofrain2steampage}}
+  \label{fig:riskofrain2}
 \end{figure}
 
-It could be said that the transition to 3D was good for Risk of Rain \parencite*{riskofrain}, however, there are many features in the first game that couldn't be brought into the game. Some player abilities that shot in straight lines to hit multiple enemies wouldn't be as effective if the enemies weren't lined up or stacked on top of one another; ladders and other platforming elements that took advantage of the space on a player's screen would look awkward and cramped in an otherwise-spacious 3D environment, meaning that the player is mainly stuck running around on the ground; and finally, while the player can see more things in front of them without the constraint of one's monitor size, enemies can easily spawn or wander behind the player and perform surprise (or sometimes \emph{unfair}) attacks and ending the player's game. Despite these shortcomings, Risk of Rain 2 \parencite*{riskofrain2} is considered a well-received improvement to the original \parencite{riskofrain2steamreviews}.
+It could be said that the transition to 3D was good for Risk of Rain \parencite*{riskofrain}, however, there are many features in the first game that couldn't be brought into the game. Some player abilities that shot in straight lines to hit multiple enemies wouldn't be as effective if the enemies weren't lined up or stacked on top of one another; ladders and other platforming elements that took advantage of the space on a player's screen would look awkward and cramped in an otherwise-spacious 3D environment, meaning that the player is mainly stuck running around on the ground; and finally, while the player can see more things in front of them without the constraint of one's monitor size, enemies can easily spawn or wander behind the player and perform surprise (or sometimes \emph{unfair}) attacks and ending the player's game. Despite these shortcomings, Risk of Rain 2 \parencite*{riskofrain2} is considered a well-received improvement to the original \parencite{riskofrain2steampage}.
 
 \subsection{3D to 4D: What will be achieved from this project?}
 
@@ -87,7 +86,14 @@ Instead of just displaying a 4D object, I wanted to allow the user to be in cont
 \subsection{4D to 2D: The challenges of visualising 4D}
 \label{subsec:challenges}
 
-Visualising the fourth dimension in simulations and games isn't simple. 2D games can be seen as simplified 3D worlds, especially when art and rendering techniques are used to try and mimic the 3D world as seen in classic arcade games like After Burner \parencite{afterburner}. Humans are three-dimensional beings and as such we feel familiar with worlds that appear to be 3D even when looking at them through a two-dimensional display. When a 3D game is rendered, matrix mathematics is employed to translate coordinates in world space to screen space and therefore render a 3D world onto the screen. 4D objects and worlds are incomprehensible to beings who can only perceive the third dimension, meaning that there is always going to be a sense of esoterism when working with anything beyond three dimensions. Moreover, 4D geometry needs to be translated into 2D geometry in order to be rendered on screen, creating an additional barrier to visualisation.
+Visualising the fourth dimension in simulations and games isn't simple. 2D games can be seen as simplified 3D worlds, especially when art and rendering techniques are used to try and mimic the 3D world as seen in classic arcade games like After Burner \parencite{afterburner} as shown in figure \ref{fig:afterburner}. Humans are three-dimensional beings and as such we feel familiar with worlds that appear to be 3D even when looking at them through a two-dimensional display. When a 3D game is rendered, matrix mathematics is employed to translate coordinates in world space to screen space and therefore render a 3D world onto the screen. 4D objects and worlds are incomprehensible to beings who can only perceive the third dimension, meaning that there is always going to be a sense of esoterism when working with anything beyond three dimensions. Moreover, 4D geometry needs to be translated into 2D geometry in order to be rendered on screen, creating an additional barrier to visualisation.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=12cm]{img/after_burner.png}
+  \caption{2D graphics mimicking the 3D world in After Burner \parencite{awesome2016arcade}}
+  \label{fig:afterburner}
+\end{figure}
 
 Firstly, in order to see a 4D object, a 4D object needs to be created. The tesseract is a 4D hypercube and is suitable as the main polytope for this project. For this project, I want to perform projections and other transformations using GPU shaders like you would for an ordinary game. This is in contrast to the approach \citeauthor*{hollasch1991four} \parencite*{hollasch1991four} and many other article writers chose; they transform the vertices in \texttt{C++} and then give those to the GPU instead. Secondly, in order to view the fourth dimension, a 4D camera can be used to view the fourth dimension from various positions and angles. Next, a projection matrix is used to project vertices into the third dimension, where it is then perceived by a separate, 3D camera and then finally projected to 2D for rendering on screen. Getting all of these steps correct is difficult as they cannot be worked on independently and tested easily --- it is the sum of these steps that achieve even the simplest result. 
 
@@ -100,8 +106,7 @@ OpenGL interprets coordinates to be homogenous when rendering \parencite{woo1999
 
 \begin{figure}[!h]
   \centering
-  %\includegraphics[width=\textwidth]{img/24-02-20/centered_4D_cube.png}
-  \emph{TODO: Homogoenous image here}
+  \includegraphics[width=14cm]{img/fake_tesseract.png}
   \caption{Homogenous coordinates creating the appearance of a tesseract}
   \label{fig:homogenous}
 \end{figure}
@@ -151,8 +156,7 @@ As mentioned in section \ref{sec:standoutElements}, another part of the viewer i
 
 \begin{figure}[!h]
   \centering
-  %\includegraphics[width=12cm]{img/polytope_information.png}
-  \emph{TODO: Information window here}
+  \includegraphics[width=12cm]{img/polytope_information.png}
   \caption{Polytope information window detailing different hypercubes}
   \label{fig:informationWindow}
 \end{figure}
@@ -160,28 +164,27 @@ As mentioned in section \ref{sec:standoutElements}, another part of the viewer i
 \subsubsection{Transformation window}
 \label{subsubsec:transformationWindow}
 
-The final window is the transformation window. In this window, the user can specify different types of transformations to be applied to the object --- the product of all these transformations can be seen in the matrix at the top of the window. This is the exact matrix that is sent to the GPU along with the view and projection matrices from the cameras. There are multiple tabs in the transformation window to modify each transformation separately. While they are mainly self-explanatory and just involve dragging values to increase or decrease them, there are some notable features of some transformations.
-
-When configuring the rotation matrix, the user can specify whether they want to manually set the angle or whether they want the object to automatically spin. The user then chooses a plane to rotate --- in 3D, if you want to rotate around the $y$ axis, then the $xz$ plane is what needs to change. In 4D, rather than rotate around an axis, a plane is used instead and so the user can specify which pair of axis they wish to manipulate. Finally, in 4D it is possible to perform 2 rotations with the same time with separate planes (such as $xz$ and $yw$), therefore in this project the user can perform the infamous `4D double rotation', along with applying independent, automatic spins on each rotation.
-
-When translating the matrix in 4D, the object doesn't move as expected. While translating in 3D simply moves the object to a different location, moving in 4D distorts the object in a way that seems incorrect. However, by moving the 4D camera in conjunction to a 4D translation, one can verify that the translation is indeed correct and that it is our expectations of the perceived translation that are incorrect.
+The final window is the transformation window shown in figure \ref{fig:transformationWindow}. In this window, the user can specify different types of transformations to be applied to the object --- the product of all these transformations can be seen in the matrix at the top of the window. This is the exact matrix that is sent to the GPU along with the view and projection matrices from the cameras. There are multiple tabs in the transformation window to modify each transformation separately. While they are mainly self-explanatory and just involve dragging values to increase or decrease them, there are some notable features of some transformations.
 
 \begin{figure}[!h]
   \centering
-  %\includegraphics[width=11cm]{img/transformation_window.png}
-  \emph{TODO: Transformation window here (with new transformations)}
+  \includegraphics[width=10cm]{img/transformation_window.png}
   \caption{The transformation window on the rotation section}
-  \label{fig:informationWindow}
+  \label{fig:transformationWindow}
 \end{figure}
+
+When configuring the rotation matrix, the user can specify whether they want to manually set the angle or whether they want the object to automatically spin. The user then chooses a plane to rotate --- in 3D, if you want to rotate around the $y$ axis, then the $xz$ plane is what needs to change. In 4D, rather than rotating around an axis, a plane is used instead and so the user can specify which pair of axis they wish to manipulate. Finally, in 4D it is possible to perform 2 rotations with the same time with separate planes (such as $xz$ and $yw$), therefore in this project the user can perform the infamous `4D double rotation', along with applying independent, automatic spins on each rotation.
+
+When translating the matrix in 4D, the object doesn't move as expected. While translating in 3D simply moves the object to a different location, moving in 4D distorts the object in a way that seems incorrect. However, by performing 4D camera movement and a 4D translation, one can verify that these are indeed correct and that it is our expectations that are incorrect.
 
 \subsection{The polytopes}
 \label{subsec:polytopes}
 
-There are three polytopes for this project: The \emph{simplex}, the \emph{hypercube} and the \emph{hyperoctahedron}. The next polytope I would include would be the \emph{120 cell}, but with 600 vertices and 1200 edges, constructing a hyperdodecahedron would be very time consuming and its visualisation may be confusing with so many lines drawn --- while rendering solid shapes instead of wireframes would make this more attractive to implement, this would be at the cost of detail. Each polytope only handles it's construction and storage of its information as the rest is handled by a common base class defined in the file \texttt{Polytope.h}.
+There are three polytopes for this project: The \emph{simplex}, the \emph{hypercube} and the \emph{hyperoctahedron}. The construction and final appearance of these polytopes can be seen in appendix \ref{app:polytopes}. The next polytope I would include would be the \emph{120 cell}, but with 600 vertices and 1200 edges, constructing a hyperdodecahedron would be very time consuming and its visualisation may be confusing with so many lines drawn --- while rendering solid shapes instead of wireframes would make this more attractive to implement, this would be at the cost of detail. Each polytope only handles it's construction and storage of its information as the rest is handled by a common base class defined in the file \texttt{Polytope.h}.
 
 This common class stores \texttt{vectors} of the objects position and scale as well as some \texttt{floats} representing rotation information. Every frame, matrices representing these transformations are recalculated and then combined to form the final transformation matrix that can be seen in the transformation window discussed in section \ref{sec:standoutElements}. The values that are tweaked with that interface are these variables inside \texttt{Polytope}, meaning that each shape's transformations are stored separately from one another.
 
-When a polytope derived from the base class is constructed using its specialised constructor, it is pointing \texttt{vertices} and \texttt{indices} to the addresses of arrays containing \texttt{floats} and \texttt{unsigned integers} respectively. When these arrays are set up, \texttt{updateVertices} is called to inform inform \texttt{Polytope} how many values have been stored in each one and how they should be rendered. This means that the \texttt{Polytope} base class doesn't ever know what it's rendering, but rather \emph{how} to render the stored data.
+When a polytope derived from the base class is constructed using its specialised constructor, it is pointing \texttt{vertices} and \texttt{indices} to the addresses of arrays containing \texttt{floats} and \texttt{unsigned integers} respectively. When these arrays are set up, \texttt{updateVertices} is called to inform \texttt{Polytope} how many values have been stored in and how they should be rendered. This means that the \texttt{Polytope} base class doesn't know what it's rendering, but rather \emph{how} to render it.
 
 \subsection{The pipeline}
 \subsubsection{View matrices}
@@ -211,7 +214,7 @@ Each frame, the \texttt{viewer} handles the users input and then calls \texttt{u
   \end{pmatrix}
 \end{equation*}
 
-Even though this is a 3D transformation, the use of the fourth dimension and homogenous coordinates is required to translate a set of coordinates. This meant that every 4D operation including the transformations in section \ref{subsubsec:transformationWindow} were implemented with 5D (as in 5x5) matrices. Since this use-case is so uncommon, most graphics libraries including GLM do not provide 5D vectors, matrices or the operations to build and manipulate them. It is because of this that I could not rely on GLM and had to write my own matrix implementations of the construction and multiplication of these 5D matrices. The 5x5 4D view matrix $\textbf{M}$ can be found by crossing the vectors $up$, $forward$ (found by $target - position$) and $over$; $over$ is required for the same reason that $up$ is necessary in 3D view matrices and each dimensional axis requires a new `up' \parencite[\texttt{CameraND.h}]{truengine}.
+Despite being a 3D transformation, the use of a 4x4 matrix and homogenous coordinates is required to produce a translation. Every 4D operation including the transformations in section \ref{subsubsec:transformationWindow} were implemented with 5D (as in 5x5) matrices. Since this use-case is so uncommon, most graphics libraries including GLM do not provide 5D vectors, matrices or the operations to build and manipulate them. It is because of this that I could not rely on GLM and had to write my own matrix implementations of the construction and multiplication of these 5x5 matrices. The 5x5 4D view matrix $\textbf{M}$ can be found by crossing the vectors $up$, $forward$ (found by $target - position$) and $over$; $over$ is required for the same reason that $up$ is necessary in 3D view matrices and each dimensional axis requires a new `up' \parencite[\texttt{CameraND.h}]{truengine}.
 
 \begin{equation*}
   \textbf{M} =
@@ -233,7 +236,7 @@ Even though this is a 3D transformation, the use of the fourth dimension and hom
   \quad\right\}
 \end{equation*}
 
-It is important to note that the use of 4D vectors enables the usage of the triple-cross-product. In 3D, two 3D vectors are placed and cross-multiplied in a 3x3 matrix where the final column or row is taken as the output, meaning that in a 4x4 matrix, 3 4D vectors can be multiplied together in the same way:
+Note that the use of 4D vectors enables the usage of the triple-cross-product. In 3D, two vectors are inserted and cross-multiplied in a 3x3 matrix where elements in the final column is taken as the output, meaning that in a 4x4 matrix, 3 4D vectors can be multiplied in the same way:
 
 \begin{equation*}
   cross3(a, b, c) =
@@ -249,7 +252,7 @@ It is important to note that the use of 4D vectors enables the usage of the trip
 
 With the model matrix being created via user-defined transformations and the view matrices being calculated by the cameras, the only matrices remaining are the ones that handle projecting from a higher dimension to a lower dimension. While the 3D to 2D projection was achieved trivially with the help of GLM's \texttt{glm::perspective} function, projecting 4D to 3D is a more complex process. 
 
-There isn't necessarily a correct solution for 4D to 3D projection as we cannot comprehend what the 4th dimension should look like; it's easy to determine whether the perspective used in art is unrealistic because we can compare it to real life, but we cannot compare what we see in 3D to what we expect to see in 4D. \citeauthor{schloss2016understanding} created an insightful video showing how a tesseract can be projected to 3D by projecting its shadow into the third dimension, a technique known as a stereographic projection \parencite*[2:42]{schloss2016understanding}. \citeauthor{schloss2016understanding} proposed the following projection matrix $\textbf{P}$ where $l_w$ is the location of the light source along the 4D axis and $p$ is the point to be projected:
+There isn't necessarily a correct solution for 4D to 3D projection as we cannot comprehend what the 4th dimension should look like; it's easy to determine whether the perspective used in art is unrealistic because we can compare it to real life, but we cannot compare what we see in 3D to what we expect to see in 4D. \citeauthor{schloss2016understanding} \parencite*[2:42]{schloss2016understanding} created an insightful video showing how a tesseract can be projected to 3D by projecting its shadow into the third dimension, a technique known as a stereographic projection. \citeauthor{schloss2016understanding} proposed the following projection matrix $\textbf{P}$ where $l_w$ is the location of the light source along the 4D axis and $p$ is the point to be projected:
 
 \begin{equation*}
   \textbf{P} =
@@ -266,23 +269,33 @@ Since $w$ is the vertex of the 4D object to be projected, this matrix needs to b
 
 Development began with the foundations of the program --- creating a window using GLFW and creating the core loop of the program to create opportunities for event handling and object updating and rendering. The first milestone was to render a cube centered at $(0, 0, 0, 0)$ on screen and then turn it into a tesseract. As described in section \ref{sec:standoutElements}, simply rendering a cube with 4D coordinates didn't work even though it gave off the impression that it did. In order to incorporate a 4D camera the 4D coordinates needed to be interpreted as such and not just as the scaling factor for homogenous coordinates.
 
-Despite the tesseract being rendered in the intended way, there was a 3D object being rendered on screen and so work was put into the 3D camera. I learned that while setting up the camera, OpenGL's clipping space was actually left-handed where the $z$-axis extends towards the camera and not into the horizon when the $x$ axis extends to the right. It was very difficult to get my bearings when the world is completely black and the tesseract is symmetrical and I continuously thought that the camera was facing the wrong direction, my matrix multiplication function was incorrect, whether my usage of row-major or column-major matrices was incorrect or even that I was cross-multiplying my vectors the wrong way round. This simple misunderstanding depleted a lot of hours of development time.
-
-When the 3D camera was working as expected and could be piloted like a first-person-shooter, it was time to get the 4D camera functioning correctly. The 4D camera's initial implementation made the tesseract completely disappear indicating that there were numerous issues occurring --- I had no idea what was the `correct' way to do this and I had to perform a lot of experimentation. I had no idea whether the use of OpenGL or GLM meant that information was inapplicable, or whether my vertices were somehow constructed or buffered incorrectly. After shifting the $w$ components of the tesseract from $w \in \{-1, 1\}$ to $w \in \{0, 1\}$, I finally had something rendering on screen. Figure \ref{fig:incorrectCamera} shows the perplexing issue of how non-zero $w$ components of the tesseract's vertices caused them to go invisible.
+Despite the tesseract not being rendered in the intended way, there was a 3D object being rendered on screen and so work was put into the 3D camera. I learned that while setting up the camera, OpenGL's clipping space was actually left-handed where the $z$-axis extends towards the camera and not into the horizon when the $x$ axis extends to the right. It was very difficult to get my bearings when the world is completely black and the tesseract is symmetrical and I continuously thought about whether camera was facing the wrong direction, my matrix multiplication function was incorrect, my usage of row-major or column-major matrices was incorrect or if I was cross-multiplying my vectors the wrong way round. This simple misunderstanding depleted a lot of hours of development time.
 
 \begin{figure}[!h]
   \centering
-  % \includegraphics[width=\textwidth]{img/centered_4D_cube.png}
-  \emph{TODO: INCLUDE DISAPPEARING CUBE IMAGE HERE}
+  \includegraphics[width=\textwidth]{img/centered_4D_cube.png}
   \caption{The inner cube totally disappears `into the fourth dimension'}
   \label{fig:incorrectCamera}
 \end{figure}
 
-Since this was my first glimpse into the effects of rendering non-homogenous 4D coordinates I found this result exciting despite it being a bug. At first I suspected the bug to be related to the interaction between the near and far planes of the 4D camera and the fourth dimension, but it was actually my projection. Projection matrices eliminate a component of a vector by being sized differently; multiplying a 4x3 matrix with vector of length 4 would produce coordinates containing 3 elements instead. I initially had my projection set up as a 4x4 matrix and accepted the output to be a 3D coordinate written in a homogenous way and so I scaled the entire vector by its $w$ component. After altering my projection matrix produce \texttt{vec3}s, the tesseract was rendered although it was skewed due to no longer being centered around $(0, 0, 0, 0)$. After changing the tesseract's $w$ such that $w \in \{-1, 1\}$.
+\pagebreak
 
-After rendering the initial tesseract, it was time to allow the user to manipulate the tesseract's transformation matrix as well as introduce different polytopes. The \texttt{simplex}, \texttt{hyperoctahedron} along with the existing \texttt{hypercube} were the three polytopes I settled on as the 4D shapes of other polytopes would require a project of similar magnitude to this one to generate. The \texttt{Polytope} class was then introduced to give the three chosen polytopes a base class to override as discussed in section \ref{subsec:polytopes} so that each polytope had an opportunity to construct itself and fill out the information window. I believe this was the most appropriate way of including new shapes as the only thing that separates how a cube and an octahedron are rendered is the geometry itself. This class would be more than capable of handling further 4D geometry in the future if shapes like the 120-cell were included. 
+After the 3D camera was fixed and could be piloted as expected, it was time to get the 4D camera functioning correctly. The 4D camera's initial implementation made the tesseract completely disappear indicating that there were numerous issues occurring --- I had no idea what was the `correct' way to do this and I had to perform a lot of experimentation. I had no idea whether the use of OpenGL or GLM meant that information was inapplicable, or whether my vertices were somehow constructed or buffered incorrectly. After shifting the $w$ components of the tesseract from $w \in \{-1, 1\}$ to $w \in \{0, 1\}$, I finally had something rendering on screen. Figure \ref{fig:incorrectCamera} shows the perplexing issue of how non-zero $w$ components of the tesseract's vertices disappeared.
 
-If I had managed to fix the issues with the 4D view and projection matrices sooner, I would have investigated constructive solid geometry (CSG) as part of the project. CSG allows you to add and subtract meshes from other meshes to create conjoined shapes and holes; this project would have then been able to deform the 4D object such that for any value of $w$ the shape would render a 3D slice of the 4D object. This couldn't be done without CSG as it requires the discovery of vertices between buffered vertices in order to create new shapes, something that is far beyond the scope of this project and would require substantially more time to implement.
+Since this was my first glimpse into the effects of rendering non-homogenous 4D coordinates I found this result exciting despite it being a bug. At first I suspected the bug to be related to the interaction between the near and far planes of the 4D camera and the fourth dimension, but it was actually my projection. Projection matrices eliminate a component of a vector by being sized differently; multiplying a 4x3 matrix with vector of length 4 would produce coordinates containing 3 elements instead. I initially had my projection set up as a 4x4 matrix and accepted the output to be a 3D coordinate written in a homogenous way and so I scaled the entire vector by its $w$ component. After altering my projection matrix produce \texttt{vec3}s, the tesseract was rendered although it was skewed due to no longer being centered around $(0, 0, 0, 0)$. This was fixed by reverting the $w$ component in the tesseract's vertices such that $w \in \{-1, 1\}$.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=\textwidth]{img/finished_project.png}
+  \caption{A final screenshot of the project}
+  \label{fig:finishedProject}
+\end{figure}
+
+\pagebreak
+
+After rendering the initial tesseract, it was time to allow the user to manipulate the tesseract's transformation matrix as well as introduce the different polytopes shown in appendix \ref{app:polytopes}. The \texttt{simplex}, \texttt{hyperoctahedron} along with the existing \texttt{hypercube} were the three polytopes I settled on as the 4D shapes of other polytopes would require a project of similar magnitude to this one to generate. The \texttt{Polytope} class was then introduced to give the three chosen polytopes a base class to override as discussed in section \ref{subsec:polytopes} so that each polytope had an opportunity to construct itself and fill out the information window. I believe this was the most appropriate way of including new shapes as the only thing that separates how a cube and an octahedron are rendered is the geometry itself. This class would be more than capable of handling further 4D geometry in the future if shapes like the 120-cell were included. 
+
+With that, I had achieved all the objectives I set out to meet for this project as shown in figure \ref{fig:finishedProject}. If I had managed to fix the issues with the 4D view and projection matrices sooner, I would have investigated constructive solid geometry (CSG) as part of the project. CSG allows you to add and subtract meshes from other meshes to create conjoined shapes and holes; this project would have then been able to deform the 4D object such that for any value of $w$ the shape would render a 3D slice of the 4D object. This couldn't be done without CSG as it requires the discovery of vertices between buffered vertices in order to create new shapes, something that is far beyond the scope of this project and would require substantially more time to implement.
 
 \cleardoublepage
 \printbibliography[
@@ -292,6 +305,9 @@ If I had managed to fix the issues with the 4D view and projection matrices soon
 
 \cleardoublepage
 \begin{appendices}
+
+\section{Polytopes}
+\label{app:polytopes}
 
 \section{Vertex shader source code (GLSL)}
 \label{app:vertexShader}
