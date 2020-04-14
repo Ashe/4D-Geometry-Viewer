@@ -58,7 +58,7 @@
 \pagenumbering{arabic}
 \setcounter{page}{1}
 
-\section{Background description (10\%)}
+\section{Background description}
 
 For this assignment, I have chosen to learn about and investigate the fourth dimension with respect to graphics. Most games are typically set in a two or three dimensional world and the fourth dimension is rarely discussed as part of a game's core design, if discussed at all. I aim to create an interactive visualisation of four-dimensional geometry in an effort to educate both myself and others how the fourth dimension may be applicable to graphics used in video games or other media outlets.
 
@@ -97,7 +97,7 @@ Visualising the fourth dimension in simulations and games isn't simple. 2D games
 
 Firstly, in order to see a 4D object, a 4D object needs to be created. The tesseract is a 4D hypercube and is suitable as the main polytope for this project. For this project, I want to perform projections and other transformations using GPU shaders like you would for an ordinary game. This is in contrast to the approach \citeauthor*{hollasch1991four} \parencite*{hollasch1991four} and many other article writers chose; they transform the vertices in \texttt{C++} and then give those to the GPU instead. Secondly, in order to view the fourth dimension, a 4D camera can be used to view the fourth dimension from various positions and angles. Next, a projection matrix is used to project vertices into the third dimension, where it is then perceived by a separate, 3D camera and then finally projected to 2D for rendering on screen. Getting all of these steps correct is difficult as they cannot be worked on independently and tested easily --- it is the sum of these steps that achieve even the simplest result. 
 
-\section{Standout elements (10\%)}
+\section{Standout elements}
 \label{sec:standoutElements}
 
 My largest achievement with this project was that I actually managed to render a tesseract, a 4D hypercube. Given a set of 4D vertices and a list of indices, any poly in the 4th dimension and below can be rendered in this project. Changing the 3D and 4D cameras alter the perspective of the shape which is handled by the GPU as it would be in a normal video game. This was extremely difficult at first because of homogenous coordinates.
@@ -115,7 +115,7 @@ Another feature I'm proud of is the summary window. For each polytope there is a
 
 Finally, I'm very proud of the fact that I created this application from scratch while maintaining cross-platform support. Until this project, I had never set up a 3D application from scratch and so learning and creating my own abstractions for use in the graphics pipeline was very fulfilling. The CMake build tool \parencite{cmake} allows a developer to generate an appropriate \texttt{C} or \texttt{C++} project file such as \texttt{.sln} for compilation on various platforms, while the use of GLFW \parencite{glfw}, OpenGL \parencite{opengl}, GLM \parencite{glm} and ImGui \parencite{imgui} meant that there were no dependencies on any given operating system and therefore any desktop should be able to compile it. This is a personal victory as it means that anyone interested in seeing and experimenting with 4D geometry can compile my program and take inspiration from the source code.
 
-\section{Design (30\%)}
+\section{Design}
 
 The bulk of the project is split between three core areas:
 
@@ -265,7 +265,7 @@ There isn't necessarily a correct solution for 4D to 3D projection as we cannot 
 
 Since $w$ is the vertex of the 4D object to be projected, this matrix needs to be calculated for every vertex in the shape, therefore this calculation needs to happen after the vertices have been transformed by both transformation and view matrices. As discussed in section \ref{subsec:challenges}, this project is going to use shaders to take advantage of the GPU, meaning that the construction of the projection matrix $\textbf{P}$ along with the ability to multiply 5x5 matrices and 4D vectors needed be implemented with GLSL inside the vertex shader --- this can be seen in appendix \ref{app:vertexShader}. Everything is now taken into consideration and rendering a 4D object is the same as it would be for any 3D object: binding buffers, sending vertex and index data to the GPU, passing uniforms to the shaders and finally drawing the elements based on the information stored in the \texttt{Polytope} class.
 
-\section{Implementation (10\%)}
+\section{Implementation}
 
 Development began with the foundations of the program --- creating a window using GLFW and creating the core loop of the program to create opportunities for event handling and object updating and rendering. The first milestone was to render a cube centered at $(0, 0, 0, 0)$ on screen and then turn it into a tesseract. As described in section \ref{sec:standoutElements}, simply rendering a cube with 4D coordinates didn't work even though it gave off the impression that it did. In order to incorporate a 4D camera the 4D coordinates needed to be interpreted as such and not just as the scaling factor for homogenous coordinates.
 
