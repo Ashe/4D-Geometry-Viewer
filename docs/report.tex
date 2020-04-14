@@ -284,7 +284,12 @@ After the 3D camera was fixed and could be piloted as expected, it was time to g
 
 Since this was my first glimpse into the effects of rendering non-homogenous 4D coordinates I found this result exciting despite it being a bug. At first I suspected the bug to be related to the interaction between the near and far planes of the 4D camera and the fourth dimension, but it was actually my projection. Projection matrices eliminate a component of a vector by being sized differently; multiplying a 4x3 matrix with vector of length 4 would produce coordinates containing 3 elements instead. I initially had my projection set up as a 4x4 matrix and accepted the output to be a 3D coordinate written in a homogenous way and so I scaled the entire vector by its $w$ component. After altering my projection matrix produce \texttt{vec3}s, the tesseract was rendered although it was skewed due to no longer being centered around $(0, 0, 0, 0)$. This was fixed by reverting the $w$ component in the tesseract's vertices such that $w \in \{-1, 1\}$.
 
-
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=\textwidth]{img/finished_project.png}
+  \caption{A screenshot of the finished project}
+  \label{fig:finishedProject}
+\end{figure}
 \pagebreak
 
 After rendering the initial tesseract, it was time to allow the user to manipulate the tesseract's transformation matrix as well as introduce the different polytopes shown in appendix \ref{app:polytopes}. The \texttt{simplex}, \texttt{hyperoctahedron} along with the existing \texttt{hypercube} were the three polytopes I settled on as the 4D shapes of other polytopes would require a project of similar magnitude to this one to generate. The \texttt{Polytope} class was then introduced to give the three chosen polytopes a base class to override as discussed in section \ref{subsec:polytopes} so that each polytope had an opportunity to construct itself and fill out the information window. I believe this was the most appropriate way of including new shapes as the only thing that separates how a cube and an octahedron are rendered is the geometry itself. This class would be more than capable of handling further 4D geometry in the future if shapes like the 120-cell were included. 
