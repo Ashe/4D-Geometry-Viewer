@@ -1,3 +1,5 @@
+![Preview](/docs/img/finished_project.png)
+
 # Ashley Smith - 4D Geometry Viewer
 
 ## What is this?
