@@ -29,4 +29,3 @@ make
 Inside the [`images`](/docs/img) folder there is some material that wasn't created by myself. 
 * [An image of Hopoo Game's 'Risk of Rain 2'](/docs/img/risk_of_rain_2.jpg) was taken from their [Steam store page](https://store.steampowered.com/app/632360/Risk_of_Rain_2/)
 * [An image of After Burner](/docs/img/after_burner.png) was taken from [Universal Videogame List](https://www.uvlist.net/game-16657-After+Burner)
-* [An edited video of stereographic projection](/docs/img/4D_projections.webm) was taken from [LeiosOS' video 'Understanding 4D -- The Tesseract'](https://youtu.be/iGO12Z5Lw8s)
