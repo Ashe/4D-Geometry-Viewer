@@ -8,7 +8,7 @@ This project is an interactive simulation for visualising 4D geometry. See [`rep
 ## How do I use it?
 Use `WASD` to move the camera with `space` and `c` to go upwards and downwards. Hold down the `right-mouse-button` and move the mouse to look around. 
 
-Pick a polytope from the menubar in the top left and then use the transformation window to manipulate it. Changing the settings of the 4D camera will also change the appearance of the object - I highly reccomend translating the shape in 4D and then moving the 4D camera to re-centre it!
+Pick a polytope from the menubar in the top left and then use the transformation window to manipulate it. Changing the settings of the 4D camera will also change the appearance of the object - I highly recommend translating the shape in 4D and then moving the 4D camera to re-centre it!
 
 ## How do I compile it?
 This project was created using [`CMake`](https://cmake.org/) to be cross-platform.
