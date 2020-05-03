@@ -42,7 +42,7 @@
 \begin{document}
 
 \title{\titlefont Rendering assignment: 4D geometry}
-\author{Ashley Smith}
+\author{Ashley Rose}
 \date{\today}
 \maketitle
 \thispagestyle{empty}
@@ -79,7 +79,7 @@ It could be said that the transition to 3D was good for Risk of Rain \parencite*
 
 If the third dimension can create new opportunities and conceptualise new gameplay and new mechanics, it does make one wonder about the possibilities that the fourth dimension may bring to gaming. With virtual reality and other technologies becoming more accessible and accepted as avenues of entertainment, the fourth dimension may not seem so experimental. In this project, I wrote my own 4D geometry viewer in an effort to lessen the gap between the third and fourth dimensions. While this project doesn't feature anything new, it is hoped that the development of this project is just as insightful and interesting as the end result and that the approaches used to build the application will be of use to future developers wanting to pioneer the fourth dimension.
 
-Video games are just as much about the feel of the world as they are about the look --- being able to perceive the world from different positions and angles and interact with it in various ways both contribute to how well a world has been crafted. I feel that this project benefits from user interaction in a similar way and will help users understand the fourth dimension better. 
+Video games are just as much about the feel of the world as they are about the look --- being able to perceive the world from different positions and angles and interact with it in various ways both contribute to how well a world has been crafted. I feel that this project benefits from user interaction in a similar way and will help users understand the fourth dimension better.
 
 Instead of just displaying a 4D object, I wanted to allow the user to be in control of how the object is looked at and how it is transformed. These interactions are made with both keyboard shortcuts and an interactive menu. Users can move and rotate the camera to examine the 4D object, while a menu can be used to apply various translations, rotations and scales to the object. The combination of each of these transformations can be seen in a 5x5 matrix and their effects are applied to the 4D object and therefore forming the connection between how an object is transformed and how it appears --- something which may be confusing in the context of the fourth dimension.
 
@@ -95,7 +95,7 @@ Visualising the fourth dimension in simulations and games isn't simple. 2D games
   \label{fig:afterburner}
 \end{figure}
 
-Firstly, in order to see a 4D object, a 4D object needs to be created. The tesseract is a 4D hypercube and is suitable as the main polytope for this project. For this project, I want to perform projections and other transformations using GPU shaders like you would for an ordinary game. This is in contrast to the approach \citeauthor*{hollasch1991four} \parencite*{hollasch1991four} and many other article writers chose; they transform the vertices in \texttt{C++} and then give those to the GPU instead. Secondly, in order to view the fourth dimension, a 4D camera can be used to view the fourth dimension from various positions and angles. Next, a projection matrix is used to project vertices into the third dimension, where it is then perceived by a separate, 3D camera and then finally projected to 2D for rendering on screen. Getting all of these steps correct is difficult as they cannot be worked on independently and tested easily --- it is the sum of these steps that achieve even the simplest result. 
+Firstly, in order to see a 4D object, a 4D object needs to be created. The tesseract is a 4D hypercube and is suitable as the main polytope for this project. For this project, I want to perform projections and other transformations using GPU shaders like you would for an ordinary game. This is in contrast to the approach \citeauthor*{hollasch1991four} \parencite*{hollasch1991four} and many other article writers chose; they transform the vertices in \texttt{C++} and then give those to the GPU instead. Secondly, in order to view the fourth dimension, a 4D camera can be used to view the fourth dimension from various positions and angles. Next, a projection matrix is used to project vertices into the third dimension, where it is then perceived by a separate, 3D camera and then finally projected to 2D for rendering on screen. Getting all of these steps correct is difficult as they cannot be worked on independently and tested easily --- it is the sum of these steps that achieve even the simplest result.
 
 \section{Standout elements}
 \label{sec:standoutElements}
@@ -250,7 +250,7 @@ Note that the use of 4D vectors enables the usage of the triple-cross-product. I
 
 \subsubsection{Projection matrices}
 
-With the model matrix being created via user-defined transformations and the view matrices being calculated by the cameras, the only matrices remaining are the ones that handle projecting from a higher dimension to a lower dimension. While the 3D to 2D projection was achieved trivially with the help of GLM's \texttt{glm::perspective} function, projecting 4D to 3D is a more complex process. 
+With the model matrix being created via user-defined transformations and the view matrices being calculated by the cameras, the only matrices remaining are the ones that handle projecting from a higher dimension to a lower dimension. While the 3D to 2D projection was achieved trivially with the help of GLM's \texttt{glm::perspective} function, projecting 4D to 3D is a more complex process.
 
 There isn't necessarily a correct solution for 4D to 3D projection as we cannot comprehend what the 4th dimension should look like; it's easy to determine whether the perspective used in art is unrealistic because we can compare it to real life, but we cannot compare what we see in 3D to what we expect to see in 4D. \citeauthor{schloss2016understanding} \parencite*[2:42]{schloss2016understanding} created an insightful video showing how a tesseract can be projected to 3D by projecting its shadow into the third dimension, a technique known as a stereographic projection. \citeauthor{schloss2016understanding} proposed the following projection matrix $\textbf{P}$ where $l_w$ is the location of the light source along the 4D axis and $p$ is the point to be projected:
 
@@ -292,7 +292,7 @@ Since this was my first glimpse into the effects of rendering non-homogenous 4D 
 \end{figure}
 \pagebreak
 
-After rendering the initial tesseract, it was time to allow the user to manipulate the tesseract's transformation matrix as well as introduce the different polytopes shown in appendix \ref{app:polytopes}. The \texttt{simplex}, \texttt{hyperoctahedron} along with the existing \texttt{hypercube} were the three polytopes I settled on as the 4D shapes of other polytopes would require a project of similar magnitude to this one to generate. The \texttt{Polytope} class was then introduced to give the three chosen polytopes a base class to override as discussed in section \ref{subsec:polytopes} so that each polytope had an opportunity to construct itself and fill out the information window. I believe this was the most appropriate way of including new shapes as the only thing that separates how a cube and an octahedron are rendered is the geometry itself. This class would be more than capable of handling further 4D geometry in the future if shapes like the 120-cell were included. 
+After rendering the initial tesseract, it was time to allow the user to manipulate the tesseract's transformation matrix as well as introduce the different polytopes shown in appendix \ref{app:polytopes}. The \texttt{simplex}, \texttt{hyperoctahedron} along with the existing \texttt{hypercube} were the three polytopes I settled on as the 4D shapes of other polytopes would require a project of similar magnitude to this one to generate. The \texttt{Polytope} class was then introduced to give the three chosen polytopes a base class to override as discussed in section \ref{subsec:polytopes} so that each polytope had an opportunity to construct itself and fill out the information window. I believe this was the most appropriate way of including new shapes as the only thing that separates how a cube and an octahedron are rendered is the geometry itself. This class would be more than capable of handling further 4D geometry in the future if shapes like the 120-cell were included.
 
 With that, I had achieved all the objectives I set out to meet for this project as shown in figure \ref{fig:finishedProject}. If I had managed to fix the issues with the 4D view and projection matrices sooner, I would have investigated constructive solid geometry (CSG) as part of the project. CSG allows you to add and subtract meshes from other meshes to create conjoined shapes and holes; this project would have then been able to deform the 4D object such that for any value of $w$ the shape would render a 3D slice of the 4D object. This couldn't be done without CSG as it requires the discovery of vertices between buffered vertices in order to create new shapes, something that is far beyond the scope of this project and would require substantially more time to implement.
 
@@ -349,7 +349,7 @@ With that, I had achieved all the objectives I set out to meet for this project 
   uniform float distance;
   uniform mat4 view3D;
   uniform mat4 projTo2D;
-  
+
   // Used to multiply a 5x5 matrix by a 5D vector
   void mult(out float ret[5], in float a[25], in float b[5]) {
     float result[5] = float[5](0, 0, 0, 0, 0);
@@ -363,7 +363,7 @@ With that, I had achieved all the objectives I set out to meet for this project 
         ret[i] = result[i];
     }
   }
-  
+
   // Entry point
   void main() {
 
